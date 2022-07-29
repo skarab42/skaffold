@@ -15,23 +15,26 @@
     "lib"
   ],
   "dependencies": {
+    "inquirer": "^9.0.2",
+    "meow": "^10.1.3",
+    "project-name-generator": "^2.1.9",
+    "validate-npm-package-name": "^4.0.0"
+  },
+  "devDependencies": {
     "@skarab/eslint-config": "^1.1.0",
     "@skarab/prettier-config": "^1.2.2",
-    "@skarab/typescript-config": "^1.0.0",
+    "@skarab/typescript-config": "^1.1.0",
+    "@types/inquirer": "^8.2.1",
+    "@types/node": "^18.6.2",
+    "@types/project-name-generator": "^2.1.1",
+    "@types/validate-npm-package-name": "^4.0.0",
     "eslint": "^8.20.0",
-    "meow": "^10.1.3",
     "prettier": "^2.7.1",
-    "project-name-generator": "^2.1.9",
-    "typescript": "^4.7.4",
-    "validate-npm-package-name": "^4.0.0"
+    "typescript": "^4.7.4"
   },
   "engines": {
     "node": ">=14",
     "pnpm": ">=7"
   },
-  "packageManager": "pnpm@7.6.0",
-  "devDependencies": {
-    "@types/project-name-generator": "^2.1.1",
-    "@types/validate-npm-package-name": "^4.0.0"
-  }
+  "packageManager": "pnpm@7.6.0"
 }

@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import meow from 'meow';
+import inquirer from 'inquirer';
 import { skaffold } from './skaffold.js';
 import projectNameGenerator from 'project-name-generator';
 import validateNpmPackageName from 'validate-npm-package-name';
@@ -10,6 +11,7 @@ Usage
   
 Options
   --packageName, -p  package name
+  --interactive, -i  interactive prompt
   --version    , -v  print version
   --help       , -h  print this help
 `;
@@ -18,6 +20,7 @@ const cli = meow(help.trim(), {
   importMeta: import.meta,
   flags: {
     packageName: { type: 'string', alias: 'p' },
+    interactive: { type: 'boolean', alias: 'i' },
     version: { type: 'boolean', alias: 'v' },
     help: { type: 'boolean', alias: 'h' },
   },
@@ -51,4 +54,15 @@ if (!validForNewPackages) {
   cli.showHelp();
 }
 
-skaffold({ ...cli.flags, packageName });
+const interactiveAnswers = cli.flags.interactive
+  ? await inquirer.prompt<{ packageName: string }>([
+      {
+        type: 'input',
+        name: 'packageName',
+        message: 'package name',
+        default: packageName,
+      },
+    ])
+  : { packageName };
+
+skaffold({ ...cli.flags, ...interactiveAnswers });
