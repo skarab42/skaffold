@@ -1,0 +1,6 @@
+{
+  "extends": "@skarab/typescript-config/tsconfig.node14",
+  "compilerOptions": {
+    "noEmit": true
+  }
+}
