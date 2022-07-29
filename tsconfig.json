@@ -1,6 +1,8 @@
 {
   "extends": "@skarab/typescript-config",
   "compilerOptions": {
-    "noEmit": true
+    "noEmit": true,
+    "module": "es2022",
+    "target": "es2017"
   }
 }
