@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
 import meow from 'meow';
+import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { skaffold } from './skaffold.js';
 import projectNameGenerator from 'project-name-generator';
@@ -7,24 +7,26 @@ import validateNpmPackageName from 'validate-npm-package-name';
 
 const help = `
 Usage
-  $ skaffold [packageName] [options]
+  $ pnpm skaffold [packageName] [options]
   
+The best way to generate a project as I would do it myself (Kappa).
+If the package name is not provided, a random name will be generated.
+
 Options
-  --packageName, -p  package name
-  --interactive, -i  interactive prompt
+  --packageName, -p  package name (a random name is generated if not provided)     
+  --interactive, -i  interactive prompt              
   --version    , -v  print version
   --help       , -h  print this help
 `;
 
-const cli = meow(help.trim(), {
-  importMeta: import.meta,
-  flags: {
-    packageName: { type: 'string', alias: 'p' },
-    interactive: { type: 'boolean', alias: 'i' },
-    version: { type: 'boolean', alias: 'v' },
-    help: { type: 'boolean', alias: 'h' },
-  },
-});
+const flags = {
+  packageName: { type: 'string', alias: 'p' },
+  interactive: { type: 'boolean', alias: 'i' },
+  version: { type: 'boolean', alias: 'v' },
+  help: { type: 'boolean', alias: 'h' },
+} as const;
+
+const cli = meow(help.trim(), { importMeta: import.meta, flags });
 
 if (cli.flags.version) {
   cli.showVersion();
@@ -34,35 +36,55 @@ if (cli.flags.help) {
   cli.showHelp();
 }
 
-if (cli.input[0] && cli.flags.packageName) {
-  console.error('ERROR: do not specify the "packageName" argument and option at the same time');
-  cli.showHelp();
+const errorLabel = chalk.bold.hex('#111').bgRed(' ERROR ');
+
+function printError(message: string): void {
+  process.exitCode = 1;
+  // eslint-disable-next-line no-console
+  console.error(`${errorLabel} ${chalk.red(message)}\nFor help, run ${chalk.gray('pnpm skaffold --help')}.`);
 }
 
-const packageName = cli.input[0] ?? cli.flags.packageName ?? projectNameGenerator({ words: 3 }).dashed;
-const { validForNewPackages, errors } = validateNpmPackageName(packageName);
-
-if (!validForNewPackages) {
-  console.error(`ERROR: invalid project name "${packageName}"`);
-
-  if (errors) {
-    for (const error of errors) {
-      console.error('ERROR:', error);
-    }
+async function run(): Promise<void> {
+  if (cli.input[0] && cli.flags.packageName) {
+    return printError('Do not specify the "packageName" argument and option at the same time.');
   }
 
-  cli.showHelp();
+  const flagsKeys = Object.keys(flags);
+  const cliFlagsKeys = Object.keys(cli.flags);
+  const undefinedFlags = cliFlagsKeys.filter((flag) => !flagsKeys.includes(flag));
+
+  if (undefinedFlags.length > 0) {
+    const optionWord = `option${undefinedFlags.length === 1 ? '' : 's'}`;
+    return printError(`Unknown ${optionWord} "${undefinedFlags.join(',')}".`);
+  }
+
+  const packageName = cli.input[0] ?? cli.flags.packageName ?? projectNameGenerator({ words: 3 }).dashed;
+  const { validForNewPackages, errors } = validateNpmPackageName(packageName);
+
+  if (!validForNewPackages) {
+    printError(`Invalid project name "${packageName}".`);
+
+    if (errors) {
+      for (const error of errors) {
+        printError(error);
+      }
+    }
+
+    return;
+  }
+
+  const interactiveAnswers = cli.flags.interactive
+    ? await inquirer.prompt<{ packageName: string }>([
+        {
+          type: 'input',
+          name: 'packageName',
+          message: 'package name',
+          default: packageName,
+        },
+      ])
+    : { packageName };
+
+  skaffold({ ...cli.flags, ...interactiveAnswers });
 }
 
-const interactiveAnswers = cli.flags.interactive
-  ? await inquirer.prompt<{ packageName: string }>([
-      {
-        type: 'input',
-        name: 'packageName',
-        message: 'package name',
-        default: packageName,
-      },
-    ])
-  : { packageName };
-
-skaffold({ ...cli.flags, ...interactiveAnswers });
+await run();
