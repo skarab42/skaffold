@@ -51,7 +51,19 @@ async function run(): Promise<void> {
   }
 
   const packageName = cli.input[0] ?? cli.flags.packageName ?? projectNameGenerator({ words: 3 }).dashed;
-  const { validForNewPackages, errors } = validateNpmPackageName(packageName);
+
+  const options = cli.flags.interactive
+    ? await inquirer.prompt<{ packageName: string }>([
+        {
+          type: 'input',
+          name: 'packageName',
+          message: 'package name',
+          default: packageName,
+        },
+      ])
+    : { packageName };
+
+  const { validForNewPackages, errors } = validateNpmPackageName(options.packageName);
 
   if (!validForNewPackages) {
     printError(`Invalid project name "${packageName}".`);
@@ -65,19 +77,8 @@ async function run(): Promise<void> {
     return;
   }
 
-  const interactiveAnswers = cli.flags.interactive
-    ? await inquirer.prompt<{ packageName: string }>([
-        {
-          type: 'input',
-          name: 'packageName',
-          message: 'package name',
-          default: packageName,
-        },
-      ])
-    : { packageName };
-
   try {
-    await skaffold({ ...cli.flags, ...interactiveAnswers });
+    await skaffold({ ...cli.flags, ...options });
   } catch (error) {
     if (error instanceof SkaffoldError) {
       return printError(error.message);

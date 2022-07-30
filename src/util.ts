@@ -17,10 +17,6 @@ export function printInfo(message: string): void {
   console.log(infoLabel, message);
 }
 
-export function isDirectory(path: string): boolean {
-  return fs.statSync(path).isDirectory();
-}
-
 export async function isEmptyDirectory(path: string): Promise<boolean> {
   let directory;
   try {
