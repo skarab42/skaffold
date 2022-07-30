@@ -23,5 +23,6 @@ export async function skaffold(options: Options): Promise<void> {
     fs.mkdirSync(packagePath);
   }
 
+  // eslint-disable-next-line no-console
   console.log({ packagePath });
 }
