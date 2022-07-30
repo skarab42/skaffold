@@ -1,7 +1,7 @@
 import meow from 'meow';
-import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { skaffold } from './skaffold.js';
+import { printError, SkaffoldError } from './util.js';
 import projectNameGenerator from 'project-name-generator';
 import validateNpmPackageName from 'validate-npm-package-name';
 
@@ -14,7 +14,7 @@ If the package name is not provided, a random name will be generated.
 
 Options
   --packageName, -p  package name (a random name is generated if not provided)     
-  --interactive, -i  interactive prompt              
+  --interactive, -i  interactive prompt            
   --version    , -v  print version
   --help       , -h  print this help
 `;
@@ -34,14 +34,6 @@ if (cli.flags.version) {
 
 if (cli.flags.help) {
   cli.showHelp();
-}
-
-const errorLabel = chalk.bold.hex('#111').bgRed(' ERROR ');
-
-function printError(message: string): void {
-  process.exitCode = 1;
-  // eslint-disable-next-line no-console
-  console.error(`${errorLabel} ${chalk.red(message)}\nFor help, run ${chalk.gray('pnpm skaffold --help')}.`);
 }
 
 async function run(): Promise<void> {
@@ -84,7 +76,15 @@ async function run(): Promise<void> {
       ])
     : { packageName };
 
-  skaffold({ ...cli.flags, ...interactiveAnswers });
+  try {
+    await skaffold({ ...cli.flags, ...interactiveAnswers });
+  } catch (error) {
+    if (error instanceof SkaffoldError) {
+      return printError(error.message);
+    }
+
+    throw error;
+  }
 }
 
 await run();
