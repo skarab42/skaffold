@@ -1,10 +1,16 @@
 import { basename } from 'node:path';
 import type { Options } from './types.js';
 
-export function createPackageJSON(options: Options): Record<string, unknown> {
+interface PackageJSON {
+  [x: string]: unknown;
+  scripts: Record<string, string>;
+  devDependencies: Record<string, string>;
+}
+
+export function createPackageJSON(options: Options): PackageJSON {
   const gitRepo = `${options.gitUser.name}/${basename(options.packageName)}`;
 
-  return {
+  const config: PackageJSON = {
     name: options.packageName,
     version: options.packageVersion ?? '0.0.0-development',
     description: options.description ?? 'Scaffolded with @skarab/skaffold',
@@ -28,19 +34,23 @@ export function createPackageJSON(options: Options): Record<string, unknown> {
       format: 'prettier **/* --write --cache --ignore-unknown',
       test: 'pnpm check && pnpm lint && pnpm format',
     },
-    devDependencies: {
-      '@skarab/eslint-config': '*',
-      '@skarab/prettier-config': '*',
-      '@skarab/typescript-config': '*',
-      '@types/node': '*',
-      'eslint': '*',
-      'prettier': '*',
-      'typescript': '*',
-    },
+    devDependencies: {},
     engines: {
       node: `>=${options.nodeVersion.major}`,
       pnpm: `>=${options.pnpmVersion.major}`,
     },
     packageManager: `pnpm@${options.pnpmVersion.version}`,
   };
+
+  const devDependencies = [...options.devDependencies].sort();
+
+  for (const dependency of devDependencies) {
+    config.devDependencies[dependency] = '*';
+  }
+
+  if (options.lintStaged) {
+    config.scripts['prepare'] = 'npx simple-git-hooks';
+  }
+
+  return config;
 }

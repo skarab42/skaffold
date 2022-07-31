@@ -4,6 +4,7 @@ import { skaffold } from './skaffold.js';
 import projectNameGenerator from 'project-name-generator';
 import validateNpmPackageName from 'validate-npm-package-name';
 import { getGitUser, getNpmUser, getVersion, printError, SkaffoldError } from './util.js';
+import { basename } from 'node:path';
 
 const help = `
 Usage
@@ -13,15 +14,19 @@ The best way to generate a project as I would do it myself (Kappa).
 If the package name is not provided, a random name will be generated.
 
 Options
-  --packageName, -p  package name (a random name is generated if not provided)     
-  --interactive, -i  interactive prompt            
-  --version    , -v  print version
-  --help       , -h  print this help
+  --packageName     , -p  package name (a random name is generated if not provided)     
+  --interactive     , -i  interactive prompt (default: false)
+  --lintStaged      , -l  lint staged files (default: true)
+  --listEmittedFiles,     list emitted files (default: true)         
+  --version         , -v  print version
+  --help            , -h  print this help
 `;
 
 const flags = {
   packageName: { type: 'string', alias: 'p' },
-  interactive: { type: 'boolean', alias: 'i' },
+  interactive: { type: 'boolean', alias: 'i', default: false },
+  lintStaged: { type: 'boolean', alias: 'l', default: true },
+  listEmittedFiles: { type: 'boolean', default: true },
   version: { type: 'boolean', alias: 'v' },
   help: { type: 'boolean', alias: 'h' },
 } as const;
@@ -53,15 +58,24 @@ async function run(): Promise<void> {
   const packageName = cli.input[0] ?? cli.flags.packageName ?? projectNameGenerator({ words: 3 }).dashed;
 
   const options = cli.flags.interactive
-    ? await inquirer.prompt<{ packageName: string }>([
+    ? await inquirer.prompt<{ packageName: string; lintStaged: boolean }>([
         {
           type: 'input',
           name: 'packageName',
           message: 'package name',
           default: packageName,
         },
+        {
+          type: 'expand',
+          name: 'lintStaged',
+          message: 'lint staged files',
+          choices: [
+            { key: 'y', name: 'yes', value: true },
+            { key: 'n', name: 'no', value: false },
+          ],
+        },
       ])
-    : { packageName };
+    : { packageName, lintStaged: cli.flags.lintStaged };
 
   const { validForNewPackages, errors } = validateNpmPackageName(options.packageName);
 
@@ -78,11 +92,42 @@ async function run(): Promise<void> {
   }
 
   try {
+    const gitUser = await getGitUser();
+
+    const files = [
+      'src/index.ts',
+      '.eslintrc.json',
+      '.gitignore',
+      '.prettierignore',
+      '.prettierrc.json',
+      'tsconfig.build.json',
+      'tsconfig.json',
+      { file: 'README.md', tags: { moduleName: basename(packageName), packageName } },
+      { file: 'LICENSE', tags: { date: new Date().getFullYear().toString(), ...gitUser } },
+    ];
+
+    const devDependencies = [
+      '@skarab/eslint-config',
+      '@skarab/prettier-config',
+      '@skarab/typescript-config',
+      '@types/node',
+      'eslint',
+      'prettier',
+      'typescript',
+    ];
+
+    if (options.lintStaged) {
+      devDependencies.push('lint-staged', 'simple-git-hooks');
+      files.push('.lintstagedrc.json', '.simple-git-hooks.json');
+    }
+
     await skaffold({
       ...cli.flags,
       ...options,
+      files,
+      gitUser,
+      devDependencies,
       npmUser: await getNpmUser(),
-      gitUser: await getGitUser(),
       nodeVersion: await getVersion('node'),
       pnpmVersion: await getVersion('pnpm'),
     });

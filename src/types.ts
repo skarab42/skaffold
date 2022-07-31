@@ -9,6 +9,13 @@ export interface GITUser {
   email: string;
 }
 
+export type File =
+  | string
+  | {
+      file: string;
+      tags: Record<string, string>;
+    };
+
 export interface Options {
   packageName: string;
   packageVersion?: string;
@@ -17,4 +24,8 @@ export interface Options {
   gitUser: GITUser;
   nodeVersion: SemVer;
   pnpmVersion: SemVer;
+  lintStaged: boolean;
+  listEmittedFiles: boolean;
+  devDependencies: string[];
+  files: File[];
 }
