@@ -1,10 +1,8 @@
 import fs from 'fs-extra';
 import { resolve } from 'node:path';
+import type { Options } from './types.js';
+import { createPackageJSON } from './package.js';
 import { printInfo, isEmptyDirectory, SkaffoldError } from './util.js';
-
-export interface Options {
-  packageName: string;
-}
 
 export async function skaffold(options: Options): Promise<void> {
   const packagePath = resolve(process.cwd(), options.packageName);
@@ -19,6 +17,8 @@ export async function skaffold(options: Options): Promise<void> {
     );
   }
 
+  const packageJSON = createPackageJSON(options);
+
   // eslint-disable-next-line no-console
-  console.log({ packagePath });
+  console.log({ packagePath, packageJSON });
 }

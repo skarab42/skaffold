@@ -1,5 +1,8 @@
 import chalk from 'chalk';
 import fs from 'fs-extra';
+import semver from 'semver';
+import { execa } from 'execa';
+import type { NPMUser, GITUser } from './types.js';
 
 export class SkaffoldError extends Error {}
 
@@ -27,4 +30,41 @@ export async function isEmptyDirectory(path: string): Promise<boolean> {
   } finally {
     await directory?.close();
   }
+}
+
+export async function getNpmUser(): Promise<NPMUser> {
+  const childProcess = await execa('npm', ['whoami']);
+  const name = childProcess.stdout.trim();
+
+  if (name.length === 0) {
+    throw new SkaffoldError(`Unable to retrieve your NPM username.`);
+  }
+
+  return { name };
+}
+
+export async function getGitConfig(key: string): Promise<string> {
+  const childProcess = await execa('git', ['config', key]);
+  const value = childProcess.stdout.trim();
+
+  if (value.length === 0) {
+    throw new SkaffoldError(`Unable to retrieve your GIT "${key}".`);
+  }
+
+  return value;
+}
+
+export async function getGitUser(): Promise<GITUser> {
+  return { name: await getGitConfig('user.name'), email: await getGitConfig('user.email') };
+}
+
+export async function getVersion(bin: string): Promise<semver.SemVer> {
+  const childProcess = await execa(bin, ['--version']);
+  const version = semver.parse(childProcess.stdout);
+
+  if (version === null) {
+    throw new SkaffoldError(`Unable to retrieve the "${bin}" version.`);
+  }
+
+  return version;
 }

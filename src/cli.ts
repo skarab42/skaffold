@@ -1,9 +1,9 @@
 import meow from 'meow';
 import inquirer from 'inquirer';
 import { skaffold } from './skaffold.js';
-import { printError, SkaffoldError } from './util.js';
 import projectNameGenerator from 'project-name-generator';
 import validateNpmPackageName from 'validate-npm-package-name';
+import { getGitUser, getNpmUser, getVersion, printError, SkaffoldError } from './util.js';
 
 const help = `
 Usage
@@ -78,7 +78,14 @@ async function run(): Promise<void> {
   }
 
   try {
-    await skaffold({ ...cli.flags, ...options });
+    await skaffold({
+      ...cli.flags,
+      ...options,
+      npmUser: await getNpmUser(),
+      gitUser: await getGitUser(),
+      nodeVersion: await getVersion('node'),
+      pnpmVersion: await getVersion('pnpm'),
+    });
   } catch (error) {
     if (error instanceof SkaffoldError) {
       return printError(error.message);
