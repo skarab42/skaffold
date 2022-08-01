@@ -22,6 +22,10 @@ program
   .addOption(
     new commander.Option('-f, --features [features...]', 'features to includes').choices(createFeatures).default('all'),
   )
+  .option('--user-name [name]', 'user name')
+  .option('--user-email [email]', 'user email')
+  .option('--min-node-version [version]', 'min node version')
+  .option('--min-pnpm-version [version]', 'min pnpm version')
   .option('-i, --interactive', 'interactive prompt', false)
   .option('--list-created-files', 'list created files', true)
   .option('--no-colors', 'disable colors in output')

@@ -1,5 +1,7 @@
 import chalk from 'chalk';
 import fs from 'fs-extra';
+import semver from 'semver';
+import { execa } from 'execa';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -37,4 +39,25 @@ export async function isEmptyDirectory(path: string): Promise<boolean> {
   } finally {
     await directory?.close();
   }
+}
+
+export interface GITUser {
+  name: string;
+  email: string;
+}
+
+export async function getGitConfig(key: string): Promise<string> {
+  const childProcess = await execa('git', ['config', key]);
+
+  return childProcess.stdout.trim();
+}
+
+export async function getGitUser(): Promise<GITUser> {
+  return { name: await getGitConfig('user.name'), email: await getGitConfig('user.email') };
+}
+
+export async function getVersion(bin: string): Promise<semver.SemVer | undefined> {
+  const childProcess = await execa(bin, ['--version']);
+
+  return semver.parse(childProcess.stdout) ?? undefined;
 }
