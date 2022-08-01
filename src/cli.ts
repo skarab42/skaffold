@@ -1,10 +1,10 @@
 import meow from 'meow';
 import inquirer from 'inquirer';
+import { basename } from 'node:path';
 import { skaffold } from './skaffold.js';
 import projectNameGenerator from 'project-name-generator';
 import validateNpmPackageName from 'validate-npm-package-name';
 import { getGitUser, getNpmUser, getVersion, printError, SkaffoldError } from './util.js';
-import { basename } from 'node:path';
 
 const help = `
 Usage
@@ -17,6 +17,7 @@ Options
   --packageName     , -p  package name (a random name is generated if not provided)     
   --interactive     , -i  interactive prompt (default: false)
   --lintStaged      , -l  lint staged files (default: true)
+  --testingSuite    , -t  add testing suite (default: true)
   --listEmittedFiles,     list emitted files (default: true)         
   --version         , -v  print version
   --help            , -h  print this help
@@ -26,6 +27,7 @@ const flags = {
   packageName: { type: 'string', alias: 'p' },
   interactive: { type: 'boolean', alias: 'i', default: false },
   lintStaged: { type: 'boolean', alias: 'l', default: true },
+  testingSuite: { type: 'boolean', alias: 't', default: true },
   listEmittedFiles: { type: 'boolean', default: true },
   version: { type: 'boolean', alias: 'v' },
   help: { type: 'boolean', alias: 'h' },
@@ -58,7 +60,7 @@ async function run(): Promise<void> {
   const packageName = cli.input[0] ?? cli.flags.packageName ?? projectNameGenerator({ words: 3 }).dashed;
 
   const options = cli.flags.interactive
-    ? await inquirer.prompt<{ packageName: string; lintStaged: boolean }>([
+    ? await inquirer.prompt<{ packageName: string; lintStaged: boolean; testingSuite: boolean }>([
         {
           type: 'input',
           name: 'packageName',
@@ -74,8 +76,17 @@ async function run(): Promise<void> {
             { key: 'n', name: 'no', value: false },
           ],
         },
+        {
+          type: 'expand',
+          name: 'testingSuite',
+          message: 'testing suite',
+          choices: [
+            { key: 'y', name: 'yes', value: true },
+            { key: 'n', name: 'no', value: false },
+          ],
+        },
       ])
-    : { packageName, lintStaged: cli.flags.lintStaged };
+    : { packageName, lintStaged: cli.flags.lintStaged, testingSuite: cli.flags.testingSuite };
 
   const { validForNewPackages, errors } = validateNpmPackageName(options.packageName);
 
@@ -119,6 +130,11 @@ async function run(): Promise<void> {
     if (options.lintStaged) {
       devDependencies.push('lint-staged', 'simple-git-hooks');
       files.push('.lintstagedrc.json', '.simple-git-hooks.json');
+    }
+
+    if (options.testingSuite) {
+      devDependencies.push('vitest', 'vite-plugin-vitest-typescript-assert');
+      files.push('test/index.test.ts', 'vitest.config.ts');
     }
 
     await skaffold({

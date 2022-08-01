@@ -24,6 +24,7 @@ export interface Options {
   gitUser: GITUser;
   nodeVersion: SemVer;
   pnpmVersion: SemVer;
+  testingSuite: boolean;
   lintStaged: boolean;
   listEmittedFiles: boolean;
   devDependencies: string[];

@@ -1,7 +1,7 @@
 {
-  "name": "skaffold",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@skarab/skaffold",
+  "version": "0.0.0-development",
+  "description": "The best way to generate a project as I would do it myself (Kappa)",
   "type": "module",
   "bin": "./bin/index.js",
   "author": "skarab42",
@@ -13,11 +13,13 @@
     "debug": "pnpm build && pnpm skaffold",
     "lint": "eslint ./src ./bin --fix --max-warnings=0",
     "format": "prettier **/* --write --cache --ignore-unknown",
-    "test": "pnpm check && pnpm lint && pnpm format"
+    "check-lint-format": "pnpm check && pnpm lint && pnpm format",
+    "test": "pnpm check-lint-format && pnpm vitest run"
   },
   "files": [
     "bin",
-    "lib"
+    "lib",
+    "template"
   ],
   "dependencies": {
     "chalk": "^5.0.1",
@@ -35,7 +37,7 @@
     "@skarab/typescript-config": "^1.1.0",
     "@types/fs-extra": "^9.0.13",
     "@types/inquirer": "^8.2.1",
-    "@types/node": "^18.6.2",
+    "@types/node": "^18.6.3",
     "@types/project-name-generator": "^2.1.1",
     "@types/semver": "^7.3.10",
     "@types/validate-npm-package-name": "^4.0.0",
@@ -43,7 +45,9 @@
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
     "simple-git-hooks": "^2.8.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "vite-plugin-vitest-typescript-assert": "^1.1.4",
+    "vitest": "^0.20.2"
   },
   "engines": {
     "node": ">=14",

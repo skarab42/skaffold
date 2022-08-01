@@ -28,11 +28,12 @@ export function createPackageJSON(options: Options): PackageJSON {
     exports: './lib/index.js',
     types: './lib/index.d.ts',
     scripts: {
-      check: 'tsc -p ./tsconfig.json',
-      build: 'tsc -p ./tsconfig.build.json',
-      lint: 'eslint ./src --fix --max-warnings=0',
-      format: 'prettier **/* --write --cache --ignore-unknown',
-      test: 'pnpm check && pnpm lint && pnpm format',
+      'check': 'tsc -p ./tsconfig.json',
+      'build': 'tsc -p ./tsconfig.build.json',
+      'lint': 'eslint ./src --fix --max-warnings=0',
+      'format': 'prettier **/* --write --cache --ignore-unknown',
+      'check-lint-format': 'pnpm check && pnpm lint && pnpm format',
+      'test': `pnpm check-lint-format${options.testingSuite ? ' && pnpm vitest run' : ''}`,
     },
     devDependencies: {},
     engines: {

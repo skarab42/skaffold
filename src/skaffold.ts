@@ -19,7 +19,7 @@ export async function skaffold(options: Options): Promise<void> {
     );
   }
 
-  fs.writeJsonSync(resolve(packagePath, 'package.json'), createPackageJSON(options));
+  fs.writeJsonSync(resolve(packagePath, 'package.json'), createPackageJSON(options), { spaces: 2 });
 
   for (const file of options.files) {
     const name = typeof file === 'string' ? file : file.file;
