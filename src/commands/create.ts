@@ -1,4 +1,5 @@
 import fs from 'fs-extra';
+import inquirer from 'inquirer';
 import { basename, resolve } from 'node:path';
 import projectNameGenerator from 'project-name-generator';
 import validateNpmPackageName from 'validate-npm-package-name';
@@ -15,6 +16,11 @@ export interface CreateOptions {
   features: 'all' | readonly CreateFeature[];
 }
 
+export interface InteractiveCreateOptions {
+  name: string;
+  features: readonly CreateFeature[];
+}
+
 export async function create(name: string, options: CreateOptions): Promise<void> {
   let path = resolve(process.cwd(), name);
 
@@ -24,6 +30,27 @@ export async function create(name: string, options: CreateOptions): Promise<void
   } else if (name === '.') {
     path = process.cwd();
     name = basename(path);
+  }
+
+  if (options.interactive) {
+    const interactiveOptions = await inquirer.prompt<InteractiveCreateOptions>([
+      {
+        type: 'input',
+        name: 'name',
+        message: 'project name',
+        default: name,
+      },
+      {
+        type: 'checkbox',
+        name: 'features',
+        message: 'select features',
+        choices: createFeatures,
+      },
+    ]);
+
+    name = interactiveOptions.name;
+    path = resolve(process.cwd(), name);
+    options.features = interactiveOptions.features;
   }
 
   if (!isValidNpmPackageName(name, options)) {
