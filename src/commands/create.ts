@@ -33,7 +33,7 @@ export interface CreateCommandInteractiveOptions {
 }
 
 export interface FileRecord {
-  file: string;
+  file: string | [string, ...string[]];
   tags: Record<string, string>;
 }
 
@@ -190,7 +190,12 @@ export async function create(name: string, commandLineOptions: CreateCommandComm
   if (options.features.includes('release')) {
     options.devDependencies.push(['semantic-release', '^19.0.3']);
     options.files.push({
-      file: '.github/workflows/CI.yaml',
+      file: ['.github/workflows/CI.yaml', '.github/workflows/CI-test.yaml', '.github/workflows/CI-release.yaml'],
+      tags: { minNodeVersion: options.minNodeVersion, pnpmVersion: options.pnpmVersion },
+    });
+  } else {
+    options.files.push({
+      file: ['.github/workflows/CI.yaml', '.github/workflows/CI-test.yaml'],
       tags: { minNodeVersion: options.minNodeVersion, pnpmVersion: options.pnpmVersion },
     });
   }
@@ -199,11 +204,12 @@ export async function create(name: string, commandLineOptions: CreateCommandComm
 
   fs.writeJsonSync(resolve(options.path, 'package.json'), createPackageJSON(options), { spaces: 2 });
 
-  for (const file of options.files) {
-    const name = typeof file === 'string' ? file : file.file;
-    const tags = typeof file === 'string' ? undefined : file.tags;
+  function getFileContent(files: string[], tags?: Record<string, string> | undefined): string {
+    let content = '';
 
-    let content = fs.readFileSync(resolve(templatePath, `${name}.tpl`), 'utf8');
+    for (const file of files) {
+      content += fs.readFileSync(resolve(templatePath, `${file}.tpl`), 'utf8');
+    }
 
     if (tags) {
       content = content.replace(/{([a-z]+)}/gi, (_: string, tagName: string) => {
@@ -211,13 +217,31 @@ export async function create(name: string, commandLineOptions: CreateCommandComm
       });
     }
 
+    return content;
+  }
+
+  for (const file of options.files) {
+    let name: string;
+    let content: string;
+
+    if (typeof file === 'string') {
+      name = file;
+      content = getFileContent([file]);
+    } else if (Array.isArray(file.file)) {
+      name = file.file[0];
+      content = getFileContent(file.file, file.tags);
+    } else {
+      name = file.file;
+      content = getFileContent([file.file], file.tags);
+    }
+
     const filepath = resolve(options.path, name);
+
+    fs.outputFileSync(filepath, content);
 
     if (options.listCreatedFiles) {
       util.printInfo(`FILE: ${filepath}`, options.colors);
     }
-
-    fs.outputFileSync(filepath, content);
   }
 
   util.printInfo('Done!', options.colors);
