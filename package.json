@@ -8,14 +8,14 @@
   "license": "MIT",
   "scripts": {
     "prepare": "npx simple-git-hooks",
-    "check": "tsc -p ./tsconfig.json",
     "build": "tsc -p ./tsconfig.build.json",
-    "debug": "pnpm build && pnpm skaffold",
-    "lint": "eslint ./src ./bin --fix --max-warnings=0",
-    "format": "prettier **/* --write --ignore-unknown",
+    "check": "tsc -p ./tsconfig.json",
+    "lint": "eslint --max-warnings=0 .",
+    "format": "prettier --check .",
     "check-lint-format": "pnpm check && pnpm lint && pnpm format",
     "test": "pnpm check-lint-format && pnpm vitest run",
-    "release": "semantic-release --branches main"
+    "release": "semantic-release --branches main",
+    "dev": "pnpm build && pnpm skaffold"
   },
   "private": false,
   "publishConfig": {

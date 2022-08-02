@@ -32,10 +32,10 @@ export function createPackageJSON(options: CreateCommandOptions): PackageJSON {
     },
     files: ['lib'],
     scripts: {
-      'check': 'tsc -p ./tsconfig.json',
       'build': 'tsc -p ./tsconfig.build.json',
-      'lint': 'eslint ./src --fix --max-warnings=0',
-      'format': 'prettier **/* --write --cache --ignore-unknown',
+      'check': 'tsc -p ./tsconfig.json',
+      'lint': 'eslint --max-warnings=0 .',
+      'format': 'prettier --check .',
       'check-lint-format': 'pnpm check && pnpm lint && pnpm format',
       'test': `pnpm check-lint-format${hasTest ? ' && pnpm vitest run' : ''}`,
     },
