@@ -1,7 +1,7 @@
 {
   "name": "@skarab/skaffold",
   "version": "0.0.0-development",
-  "description": "The best way to generate a project as I would do it myself (Kappa)",
+  "description": "The best way to scaffold a project as I would do it myself (Kappa)",
   "type": "module",
   "bin": "./bin/index.js",
   "author": "skarab42",
@@ -14,7 +14,12 @@
     "lint": "eslint ./src ./bin --fix --max-warnings=0",
     "format": "prettier **/* --write --cache --ignore-unknown",
     "check-lint-format": "pnpm check && pnpm lint && pnpm format",
-    "test": "pnpm check-lint-format && pnpm vitest run"
+    "test": "pnpm check-lint-format && pnpm vitest run",
+    "release": "semantic-release --branches main"
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
   },
   "files": [
     "bin",
@@ -44,6 +49,7 @@
     "eslint": "^8.20.0",
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
+    "semantic-release": "^19.0.3",
     "simple-git-hooks": "^2.8.0",
     "typescript": "^4.7.4",
     "vite-plugin-vitest-typescript-assert": "^1.1.4",
@@ -53,5 +59,15 @@
     "node": ">=14",
     "pnpm": ">=7"
   },
-  "packageManager": "pnpm@7.6.0"
+  "packageManager": "pnpm@7.6.0",
+  "keywords": [
+    "typescript",
+    "scaffold",
+    "package",
+    "project",
+    "skarab",
+    "strict",
+    "init",
+    "app"
+  ]
 }

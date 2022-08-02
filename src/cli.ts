@@ -13,7 +13,7 @@ const { version } = fs.readJsonSync(resolve(metaDirname(import.meta.url), '../pa
 program
   .name('skaffold')
   .version(version, '-v, --version')
-  .description('The best way to generate a project as I would do it myself (Kappa).');
+  .description('The best way to scaffold a project as I would do it myself (Kappa).');
 
 program
   .command('create')

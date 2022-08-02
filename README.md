@@ -1,6 +1,6 @@
 # @skarab/skaffold
 
-The best way to generate a project as I would do it myself (Kappa)
+The best way to scaffold a project as I would do it myself (Kappa)
 
 ## Installation
 
