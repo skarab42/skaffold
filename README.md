@@ -8,21 +8,35 @@ The best way to generate a project as I would do it myself (Kappa)
 pnpm add --global @skarab/skaffold
 ```
 
+## Example
+
+```bash
+skaffold create amazing-project
+cd ./amazing-project
+pnpm install
+pnpm update # optional
+```
+
 ## Usage
 
 ```bash
-Usage
-  $ pnpm skaffold [packageName] [options]
+Usage: skaffold create [options] [name]
 
-The best way to generate a project as I would do it myself (Kappa).
+Create a new project.
+
 If the package name is not provided, a random name will be generated.
 
-Options
-  --packageName     , -p  package name (a random name is generated if not provided)
-  --interactive     , -i  interactive prompt (default: false)
-  --lintStaged      , -l  lint staged files (default: true)
-  --testingSuite    , -t  add testing suite (default: true)
-  --listEmittedFiles,     list emitted files (default: true)
-  --version         , -v  print version
-  --help            , -h  print this help
+Arguments:
+  name                          a valid npm package name (default: "random")
+
+Options:
+  -f, --features [features...]  features to includes (choices: "lint-staged", "vitest", "vitest-type-assert", default: "all")
+  --user-name [name]            user name
+  --user-email [email]          user email
+  --min-node-version [version]  min node version
+  --min-pnpm-version [version]  min pnpm version
+  -i, --interactive             interactive prompt (default: false)
+  --list-created-files          list created files (default: true)
+  --no-colors                   disable colors in output
+  -h, --help                    display help for command
 ```
