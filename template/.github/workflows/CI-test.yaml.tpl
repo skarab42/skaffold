@@ -13,4 +13,5 @@
         with:
           version: {pnpmVersion}
       - run: pnpm install
+      - run: pnpm build
       - run: pnpm test
