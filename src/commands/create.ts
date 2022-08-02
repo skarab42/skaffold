@@ -6,7 +6,7 @@ import { createPackageJSON } from './create/package.js';
 import projectNameGenerator from 'project-name-generator';
 import validateNpmPackageName from 'validate-npm-package-name';
 
-export const createCommandFeatures = ['lint-staged', 'vitest', 'vitest-type-assert'] as const;
+export const createCommandFeatures = ['lint-staged', 'vitest', 'vitest-type-assert', 'release'] as const;
 export const createCommandFeatureChoices = ['all', 'none', ...createCommandFeatures] as const;
 
 export type CreateCommandFeature = typeof createCommandFeatures[number];
@@ -22,6 +22,7 @@ export interface CreateCommandBaseOptions {
 
 export interface CreateCommandCommandLineOptions extends CreateCommandBaseOptions {
   colors: boolean;
+  public: boolean;
   interactive: boolean;
   listCreatedFiles: boolean;
 }
@@ -90,7 +91,13 @@ export async function create(name: string, commandLineOptions: CreateCommandComm
         type: 'checkbox',
         name: 'options.features',
         message: 'select features',
-        choices: createCommandFeatureChoices,
+        choices: createCommandFeatures,
+      },
+      {
+        type: 'confirm',
+        name: 'options.public',
+        message: 'public project',
+        default: options.public,
       },
       {
         type: 'input',
@@ -178,6 +185,14 @@ export async function create(name: string, commandLineOptions: CreateCommandComm
   if (options.features.includes('vitest-type-assert')) {
     options.devDependencies.push(['vite-plugin-vitest-typescript-assert', '^1.1.4']);
     options.files.push('vitest.config.ts', 'test/types.test.ts');
+  }
+
+  if (options.features.includes('release')) {
+    options.devDependencies.push(['semantic-release', '^19.0.3']);
+    options.files.push({
+      file: '.github/workflows/CI.yaml',
+      tags: { minNodeVersion: options.minNodeVersion, pnpmVersion: options.pnpmVersion },
+    });
   }
 
   const templatePath = resolve(util.metaDirname(import.meta.url), '../../template');

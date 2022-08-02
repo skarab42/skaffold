@@ -23,10 +23,14 @@ export function createPackageJSON(options: CreateCommandOptions): PackageJSON {
     bugs: `https://github.com/${gitRepo}/issues`,
     funding: `https://github.com/sponsors/${options.userName}`,
     license: 'MIT',
-    private: true,
     type: 'module',
     exports: './lib/index.js',
     types: './lib/index.d.ts',
+    private: !options.public,
+    publishConfig: {
+      access: options.public ? 'public' : 'restricted',
+    },
+    files: ['lib'],
     scripts: {
       'check': 'tsc -p ./tsconfig.json',
       'build': 'tsc -p ./tsconfig.build.json',
@@ -41,6 +45,7 @@ export function createPackageJSON(options: CreateCommandOptions): PackageJSON {
       pnpm: `>=${options.minPnpmVersion}`,
     },
     packageManager: `pnpm@${options.pnpmVersion}`,
+    keywords: [],
   };
 
   const devDependencies = [...options.devDependencies].sort((a, b) => a[0].localeCompare(b[0]));
@@ -51,6 +56,10 @@ export function createPackageJSON(options: CreateCommandOptions): PackageJSON {
 
   if (options.features.includes('lint-staged')) {
     config.scripts['prepare'] = 'npx simple-git-hooks';
+  }
+
+  if (options.features.includes('release')) {
+    config.scripts['release'] = 'semantic-release --branches main';
   }
 
   return config;
