@@ -43,10 +43,10 @@ export function createPackageJSON(options: CreateCommandOptions): PackageJSON {
     packageManager: `pnpm@${options.pnpmVersion}`,
   };
 
-  const devDependencies = [...options.devDependencies].sort();
+  const devDependencies = [...options.devDependencies].sort((a, b) => a[0].localeCompare(b[0]));
 
-  for (const dependency of devDependencies) {
-    config.devDependencies[dependency] = '*';
+  for (const [name, version] of devDependencies) {
+    config.devDependencies[name] = version;
   }
 
   if (options.features.includes('lint-staged')) {

@@ -42,7 +42,7 @@ export interface CreateCommandOptions extends Required<CreateCommandCommandLineO
   shortName: string;
   nodeVersion: string;
   pnpmVersion: string;
-  devDependencies: string[];
+  devDependencies: [string, string][];
   files: File[];
 }
 
@@ -152,27 +152,27 @@ export async function create(name: string, commandLineOptions: CreateCommandComm
   ];
 
   options.devDependencies = [
-    '@skarab/eslint-config',
-    '@skarab/prettier-config',
-    '@skarab/typescript-config',
-    '@types/node',
-    'eslint',
-    'prettier',
-    'typescript',
+    ['@skarab/eslint-config', '^1.1.0'],
+    ['@skarab/prettier-config', '^1.2.2'],
+    ['@skarab/typescript-config', '^1.1.0'],
+    ['@types/node', '^18.6.3'],
+    ['eslint', '^8.20.0'],
+    ['prettier', '^2.7.1'],
+    ['typescript', '^4.7.4'],
   ];
 
   if (options.features.includes('lint-staged')) {
-    options.devDependencies.push('lint-staged', 'simple-git-hooks');
+    options.devDependencies.push(['lint-staged', '^13.0.3'], ['simple-git-hooks', '^2.8.0']);
     options.files.push('.lintstagedrc.json', '.simple-git-hooks.json');
   }
 
   if (options.features.includes('vitest') || options.features.includes('vitest-type-assert')) {
-    options.devDependencies.push('vitest');
+    options.devDependencies.push(['vitest', '^0.20.2']);
     options.files.push('test/index.test.ts');
   }
 
   if (options.features.includes('vitest-type-assert')) {
-    options.devDependencies.push('vite-plugin-vitest-typescript-assert');
+    options.devDependencies.push(['vite-plugin-vitest-typescript-assert', '^1.1.4']);
     options.files.push('vitest.config.ts', 'test/types.test.ts');
   }
 
