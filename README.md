@@ -30,7 +30,7 @@ Arguments:
   name                          a valid npm package name (default: "random")
 
 Options:
-  -f, --features [features...]  features to includes (choices: "lint-staged", "vitest", "vitest-type-assert", default: "all")
+  -f, --features [features...]  features to includes (choices: "all", "none", "lint-staged", "vitest", "vitest-type-assert", default: "all")
   --user-name [name]            user name
   --user-email [email]          user email
   --min-node-version [version]  min node version

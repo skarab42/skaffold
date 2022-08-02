@@ -7,15 +7,17 @@ import projectNameGenerator from 'project-name-generator';
 import validateNpmPackageName from 'validate-npm-package-name';
 
 export const createCommandFeatures = ['lint-staged', 'vitest', 'vitest-type-assert'] as const;
+export const createCommandFeatureChoices = ['all', 'none', ...createCommandFeatures] as const;
 
 export type CreateCommandFeature = typeof createCommandFeatures[number];
+export type CreateCommandFeatureChoices = typeof createCommandFeatureChoices[number];
 
 export interface CreateCommandBaseOptions {
   userName?: string;
   userEmail?: string;
   minNodeVersion?: string;
   minPnpmVersion?: string;
-  features: 'all' | readonly CreateCommandFeature[];
+  features: 'none' | 'all' | readonly CreateCommandFeatureChoices[];
 }
 
 export interface CreateCommandCommandLineOptions extends CreateCommandBaseOptions {
@@ -88,7 +90,7 @@ export async function create(name: string, commandLineOptions: CreateCommandComm
         type: 'checkbox',
         name: 'options.features',
         message: 'select features',
-        choices: createCommandFeatures,
+        choices: createCommandFeatureChoices,
       },
       {
         type: 'input',
@@ -129,7 +131,9 @@ export async function create(name: string, commandLineOptions: CreateCommandComm
     return;
   }
 
-  if (options.features === 'all') {
+  if (options.features === 'none') {
+    options.features = [];
+  } else if (options.features === 'all') {
     options.features = createCommandFeatures;
   }
 

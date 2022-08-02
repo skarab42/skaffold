@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import { resolve } from 'node:path';
 import * as commander from 'commander';
 import { metaDirname } from './util.js';
-import { create, createCommandFeatures } from './commands/create.js';
+import { create, createCommandFeatureChoices } from './commands/create.js';
 
 const program = new commander.Command();
 
@@ -21,7 +21,7 @@ program
   .argument('[name]', 'a valid npm package name', 'random')
   .addOption(
     new commander.Option('-f, --features [features...]', 'features to includes')
-      .choices(createCommandFeatures)
+      .choices(createCommandFeatureChoices)
       .default('all'),
   )
   .option('--user-name [name]', 'user name')
