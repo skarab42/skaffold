@@ -2,35 +2,51 @@ import fs from 'fs-extra';
 import inquirer from 'inquirer';
 import * as util from '../util.js';
 import { basename, resolve } from 'node:path';
+import { createPackageJSON } from './create/package.js';
 import projectNameGenerator from 'project-name-generator';
 import validateNpmPackageName from 'validate-npm-package-name';
 
-export const createFeatures = ['lint-staged', 'vitest', 'vitest-type-assert'] as const;
+export const createCommandFeatures = ['lint-staged', 'vitest', 'vitest-type-assert'] as const;
 
-export type CreateFeature = typeof createFeatures[number];
+export type CreateCommandFeature = typeof createCommandFeatures[number];
 
-export interface BaseOptions {
+export interface CreateCommandBaseOptions {
   userName?: string;
   userEmail?: string;
   minNodeVersion?: string;
   minPnpmVersion?: string;
-  features: 'all' | readonly CreateFeature[];
+  features: 'all' | readonly CreateCommandFeature[];
 }
 
-export interface CommandLineOptions extends BaseOptions {
+export interface CreateCommandCommandLineOptions extends CreateCommandBaseOptions {
   colors: boolean;
   interactive: boolean;
   listCreatedFiles: boolean;
 }
 
-export interface InteractiveOptions {
+export interface CreateCommandInteractiveOptions {
   name: string;
-  options: Required<BaseOptions>;
+  options: Required<CreateCommandBaseOptions>;
 }
 
-export interface Options extends Required<CommandLineOptions> {}
+export interface FileRecord {
+  file: string;
+  tags: Record<string, string>;
+}
 
-export async function create(name: string, commandLineOptions: CommandLineOptions): Promise<void> {
+export type File = string | FileRecord;
+
+export interface CreateCommandOptions extends Required<CreateCommandCommandLineOptions> {
+  path: string;
+  name: string;
+  shortName: string;
+  nodeVersion: string;
+  pnpmVersion: string;
+  devDependencies: string[];
+  files: File[];
+}
+
+export async function create(name: string, commandLineOptions: CreateCommandCommandLineOptions): Promise<void> {
   let path = resolve(process.cwd(), name);
 
   if (name === 'random') {
@@ -45,16 +61,23 @@ export async function create(name: string, commandLineOptions: CommandLineOption
   const nodeVersion = await util.getVersion('node');
   const pnpmVersion = await util.getVersion('pnpm');
 
-  let options: Options = {
+  let options: CreateCommandOptions = {
+    path,
+    name,
+    shortName: basename(name),
     userName: gitUser.name,
     userEmail: gitUser.email,
+    nodeVersion: nodeVersion ? nodeVersion.raw : 'v14.19.1',
+    pnpmVersion: pnpmVersion ? pnpmVersion.raw : '7.6.0',
     minNodeVersion: nodeVersion ? nodeVersion.major.toString() : '14',
     minPnpmVersion: pnpmVersion ? pnpmVersion.major.toString() : '7',
     ...commandLineOptions,
+    devDependencies: [],
+    files: [],
   };
 
   if (options.interactive) {
-    const interactiveOptions = await inquirer.prompt<InteractiveOptions>([
+    const interactiveOptions = await inquirer.prompt<CreateCommandInteractiveOptions>([
       {
         type: 'input',
         name: 'name',
@@ -65,7 +88,7 @@ export async function create(name: string, commandLineOptions: CommandLineOption
         type: 'checkbox',
         name: 'options.features',
         message: 'select features',
-        choices: createFeatures,
+        choices: createCommandFeatures,
       },
       {
         type: 'input',
@@ -93,39 +116,102 @@ export async function create(name: string, commandLineOptions: CommandLineOption
       },
     ]);
 
-    name = interactiveOptions.name;
-    path = resolve(process.cwd(), name);
-    options = { ...options, ...interactiveOptions.options };
+    options = {
+      ...options,
+      ...interactiveOptions.options,
+      name: interactiveOptions.name,
+      shortName: basename(interactiveOptions.name),
+      path: resolve(process.cwd(), interactiveOptions.name),
+    };
   }
 
-  if (!isValidNpmPackageName(name, options)) {
+  if (!isValidNpmPackageName(options)) {
     return;
   }
-
-  const shortName = basename(name);
 
   if (options.features === 'all') {
-    options.features = createFeatures;
+    options.features = createCommandFeatures;
   }
 
-  util.printInfo(`Skaffold package "${name}" at "${path}".`, options.colors);
+  util.printInfo(`Skaffold package "${options.name}" at "${options.path}".`, options.colors);
 
-  if (!(await createRootPath(path, options))) {
+  if (!(await createRootPath(options))) {
     return;
   }
 
-  // eslint-disable-next-line no-console
-  console.log({ name, shortName, path, options });
+  options.files = [
+    'src/index.ts',
+    '.eslintrc.json',
+    '.gitignore',
+    '.prettierignore',
+    '.prettierrc.json',
+    'tsconfig.build.json',
+    'tsconfig.json',
+    { file: 'README.md', tags: { moduleName: options.shortName, packageName: options.name } },
+    { file: 'LICENSE', tags: { date: new Date().getFullYear().toString(), ...gitUser } },
+  ];
+
+  options.devDependencies = [
+    '@skarab/eslint-config',
+    '@skarab/prettier-config',
+    '@skarab/typescript-config',
+    '@types/node',
+    'eslint',
+    'prettier',
+    'typescript',
+  ];
+
+  if (options.features.includes('lint-staged')) {
+    options.devDependencies.push('lint-staged', 'simple-git-hooks');
+    options.files.push('.lintstagedrc.json', '.simple-git-hooks.json');
+  }
+
+  if (options.features.includes('vitest') || options.features.includes('vitest-type-assert')) {
+    options.devDependencies.push('vitest');
+    options.files.push('test/index.test.ts');
+  }
+
+  if (options.features.includes('vitest-type-assert')) {
+    options.devDependencies.push('vite-plugin-vitest-typescript-assert');
+    options.files.push('vitest.config.ts', 'test/types.test.ts');
+  }
+
+  const templatePath = resolve(util.metaDirname(import.meta.url), '../../template');
+
+  fs.writeJsonSync(resolve(options.path, 'package.json'), createPackageJSON(options), { spaces: 2 });
+
+  for (const file of options.files) {
+    const name = typeof file === 'string' ? file : file.file;
+    const tags = typeof file === 'string' ? undefined : file.tags;
+
+    let content = fs.readFileSync(resolve(templatePath, `${name}.tpl`), 'utf8');
+
+    if (tags) {
+      content = content.replace(/{([a-z]+)}/gi, (_: string, tagName: string) => {
+        return tags[tagName] ?? tagName;
+      });
+    }
+
+    const filepath = resolve(options.path, name);
+
+    if (options.listCreatedFiles) {
+      util.printInfo(`FILE: ${filepath}`, options.colors);
+    }
+
+    fs.outputFileSync(filepath, content);
+  }
+
+  util.printInfo('Done!', options.colors);
 }
 
-export async function createRootPath(path: string, options: CommandLineOptions): Promise<boolean> {
-  if (!fs.existsSync(path)) {
-    fs.mkdirSync(path, { recursive: true });
+export async function createRootPath(options: CreateCommandOptions): Promise<boolean> {
+  if (!fs.existsSync(options.path)) {
+    fs.mkdirSync(options.path, { recursive: true });
 
     return true;
   }
 
-  if (!(await util.isEmptyDirectory(path))) {
+  if (!(await util.isEmptyDirectory(options.path))) {
     util.printError(
       `The destination exists but is not an empty directory! Please choose another package name or move/rename/delete the destination directory and run the command again.`,
       options.colors,
@@ -138,11 +224,11 @@ export async function createRootPath(path: string, options: CommandLineOptions):
   return true;
 }
 
-export function isValidNpmPackageName(name: string, options: CommandLineOptions): boolean {
-  const { validForNewPackages, errors } = validateNpmPackageName(name);
+export function isValidNpmPackageName(options: CreateCommandOptions): boolean {
+  const { validForNewPackages, errors } = validateNpmPackageName(options.name);
 
   if (!validForNewPackages) {
-    util.printError(`Invalid project name "${name}".`, options.colors);
+    util.printError(`Invalid project name "${options.name}".`, options.colors);
 
     if (errors) {
       for (const error of errors) {

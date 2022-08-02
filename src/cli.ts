@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import { resolve } from 'node:path';
 import * as commander from 'commander';
 import { metaDirname } from './util.js';
-import { create, createFeatures } from './commands/create.js';
+import { create, createCommandFeatures } from './commands/create.js';
 
 const program = new commander.Command();
 
@@ -18,9 +18,11 @@ program
 program
   .command('create')
   .description('Create a new project.\n\nIf the package name is not provided, a random name will be generated.')
-  .argument('[package-name]', 'a valid npm package name', 'random')
+  .argument('[name]', 'a valid npm package name', 'random')
   .addOption(
-    new commander.Option('-f, --features [features...]', 'features to includes').choices(createFeatures).default('all'),
+    new commander.Option('-f, --features [features...]', 'features to includes')
+      .choices(createCommandFeatures)
+      .default('all'),
   )
   .option('--user-name [name]', 'user name')
   .option('--user-email [email]', 'user email')
