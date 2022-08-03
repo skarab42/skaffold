@@ -1,5 +1,8 @@
 node_modules
 lib
 
-# remove or comment the following lines when you want to publish
-.github/workflows/CI.yaml
+# remove or comment the following line when you want to publish
+.github/workflows/test-release.yaml
+
+# uncomment the following line when you want to publish
+# .github/workflows/test.yaml

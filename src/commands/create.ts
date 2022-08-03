@@ -187,15 +187,20 @@ export async function create(name: string, commandLineOptions: CreateCommandComm
     options.files.push('vitest.config.ts', 'test/types.test.ts');
   }
 
+  options.files.push({
+    file: ['.github/workflows/test.yaml', '.github/workflows/parts/base.yaml', '.github/workflows/parts/test.yaml'],
+    tags: { minNodeVersion: options.minNodeVersion, pnpmVersion: options.pnpmVersion },
+  });
+
   if (options.features.includes('release')) {
     options.devDependencies.push(['semantic-release', '^19.0.3']);
     options.files.push({
-      file: ['.github/workflows/CI.yaml', '.github/workflows/CI-test.yaml', '.github/workflows/CI-release.yaml'],
-      tags: { minNodeVersion: options.minNodeVersion, pnpmVersion: options.pnpmVersion },
-    });
-  } else {
-    options.files.push({
-      file: ['.github/workflows/CI.yaml', '.github/workflows/CI-test.yaml'],
+      file: [
+        '.github/workflows/test-release.yaml',
+        '.github/workflows/parts/base.yaml',
+        '.github/workflows/parts/test.yaml',
+        '.github/workflows/parts/release.yaml',
+      ],
       tags: { minNodeVersion: options.minNodeVersion, pnpmVersion: options.pnpmVersion },
     });
   }
