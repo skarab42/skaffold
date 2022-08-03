@@ -59,7 +59,17 @@ If you have selected the `release` feature, please check the following points:
 1. Make sure you add your [NPM_TOKEN](https://docs.npmjs.com/using-private-packages-in-a-ci-cd-workflow) as a secret in your [repo configuration](https://docs.github.com/en/actions/security-guides/encrypted-secrets).
 2. Edit the `.gitignore` file and comment/uncomment the lines required for publication.
 
-It's all good 🚀 the next time you push on the main branch your package will be automatically published on NPM.
+   ```bash
+   # remove or comment the following line when you want to publish
+   .github/workflows/test-release.yaml
+
+   # uncomment the following line when you want to publish
+   # .github/workflows/test.yaml
+   ```
+
+3. Edit the `package.json` and make it public.
+   `json { "private": false, "publishConfig": { "access": "public" }, } `
+   It's all good 🚀 the next time you push on the main branch your package will be automatically published on NPM.
 
 ## My shared configurations
 
