@@ -2,6 +2,16 @@
 
 The best way to scaffold a project as I would do it myself (Kappa)
 
+## Features
+
+- 🧱 `none`:
+  - Setup the holy trinity: [Prettier](https://prettier.io/), [ESLint](https://eslint.org/), [TypeScript](https://www.typescriptlang.org/) with my [shared configuration](#my-shared-configurations).
+  - Setup [GitHub Actions](https://github.com/features/actions) to run the trinity on `push` and `pull_request`.
+- 🔎 `lint-staged`: Setup [lint-staged](https://github.com/okonet/lint-staged) and [simple-git-hooks](https://github.com/toplenboren/simple-git-hooks) to run Prettier and ESLint on staged files.
+- ✅ `vitest`: Setup [Vitest](https://vitest.dev/) and create a minimal example in the `./test` directory.
+- 🔥 `vitest-type-assert`: Setup [vite-plugin-vitest-typescript-assert](https://github.com/skarab42/vite-plugin-vitest-typescript-assert) and create a minimal example in the `./test` directory.
+- 📦 `release`: Setup [semantic-release](https://github.com/semantic-release/semantic-release) for automatic release on NPM via GitHub Actions.
+
 ## Installation
 
 ```bash
@@ -41,3 +51,9 @@ Options:
   --no-colors                   disable colors in output
   -h, --help                    display help for command
 ```
+
+### My shared configurations
+
+- [@skarab/eslint-config](https://github.com/skarab42/eslint-config)
+- [@skarab/prettier-config](https://github.com/skarab42/prettier-config)
+- [@skarab/typescript-config](https://github.com/skarab42/typescript-config)
