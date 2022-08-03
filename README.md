@@ -4,7 +4,7 @@ The best way to scaffold a project as I would do it myself (Kappa)
 
 ## Features
 
-- 🧱 `none`:
+- 🧱 `recommended`:
   - Setup the holy trinity: [Prettier](https://prettier.io/), [ESLint](https://eslint.org/), [TypeScript](https://www.typescriptlang.org/) with my [shared configuration](#my-shared-configurations).
   - Setup [GitHub Actions](https://github.com/features/actions) to run the trinity on `push` and `pull_request`.
 - 🔎 `lint-staged`: Setup [lint-staged](https://github.com/okonet/lint-staged) and [simple-git-hooks](https://github.com/toplenboren/simple-git-hooks) to run Prettier and ESLint on staged files.
@@ -40,7 +40,7 @@ Arguments:
   name                          a valid npm package name (default: "random")
 
 Options:
-  -f, --features [features...]  features to includes (choices: "all", "none", "lint-staged", "vitest", "vitest-type-assert", "release", default: "all")
+  -f, --features [features...]  features to includes (choices: "all", "recommended", "lint-staged", "vitest", "vitest-type-assert", "release", default: "all")
   --user-name [name]            user name
   --user-email [email]          user email
   --min-node-version [version]  min node version

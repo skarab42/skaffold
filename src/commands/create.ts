@@ -7,7 +7,7 @@ import projectNameGenerator from 'project-name-generator';
 import validateNpmPackageName from 'validate-npm-package-name';
 
 export const createCommandFeatures = ['lint-staged', 'vitest', 'vitest-type-assert', 'release'] as const;
-export const createCommandFeatureChoices = ['all', 'none', ...createCommandFeatures] as const;
+export const createCommandFeatureChoices = ['all', 'recommended', ...createCommandFeatures] as const;
 
 export type CreateCommandFeature = typeof createCommandFeatures[number];
 export type CreateCommandFeatureChoices = typeof createCommandFeatureChoices[number];
@@ -17,7 +17,7 @@ export interface CreateCommandBaseOptions {
   userEmail?: string;
   minNodeVersion?: string;
   minPnpmVersion?: string;
-  features: 'none' | 'all' | readonly CreateCommandFeatureChoices[];
+  features: 'all' | 'recommended' | readonly CreateCommandFeatureChoices[];
 }
 
 export interface CreateCommandCommandLineOptions extends CreateCommandBaseOptions {
@@ -138,7 +138,7 @@ export async function create(name: string, commandLineOptions: CreateCommandComm
     return;
   }
 
-  if (options.features === 'none') {
+  if (options.features === 'recommended') {
     options.features = [];
   } else if (options.features === 'all') {
     options.features = createCommandFeatures;
