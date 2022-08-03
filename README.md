@@ -68,8 +68,17 @@ If you have selected the `release` feature, please check the following points:
    ```
 
 3. Edit the `package.json` and make it public.
-   `json { "private": false, "publishConfig": { "access": "public" }, } `
-   It's all good 🚀 the next time you push on the main branch your package will be automatically published on NPM.
+
+   ```json
+   {
+     "private": false,
+     "publishConfig": {
+       "access": "public"
+     }
+   }
+   ```
+
+It's all good 🚀 the next time you push on the main branch your package will be automatically published on NPM.
 
 ## My shared configurations
 
