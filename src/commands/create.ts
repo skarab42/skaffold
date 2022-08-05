@@ -152,6 +152,7 @@ export async function create(name: string, commandLineOptions: CreateCommandComm
 
   options.files = [
     'src/index.ts',
+    '.eslintignore',
     '.eslintrc.json',
     '.gitignore',
     '.prettierignore',
