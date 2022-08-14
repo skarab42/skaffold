@@ -8,7 +8,16 @@ interface PackageJSON {
 
 export function createPackageJSON(options: CreateCommandOptions): PackageJSON {
   const gitRepo = `${options.userName}/${options.shortName}`;
-  const hasTest = options.features.includes('vitest');
+
+  let testScript = `pnpm check-lint-format`;
+
+  if (options.features.includes('vitest')) {
+    testScript += ` && pnpm vitest run`;
+
+    if (options.features.includes('coverage')) {
+      testScript += ` --coverage`;
+    }
+  }
 
   const config: PackageJSON = {
     name: options.name,
@@ -37,7 +46,7 @@ export function createPackageJSON(options: CreateCommandOptions): PackageJSON {
       'lint': 'eslint --max-warnings=0 .',
       'format': 'prettier --check .',
       'check-lint-format': 'pnpm check && pnpm lint && pnpm format',
-      'test': `pnpm check-lint-format${hasTest ? ' && pnpm vitest run' : ''}`,
+      'test': testScript,
     },
     devDependencies: {},
     engines: {

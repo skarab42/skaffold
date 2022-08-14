@@ -6,7 +6,7 @@ import { createPackageJSON } from './create/package.js';
 import projectNameGenerator from 'project-name-generator';
 import validateNpmPackageName from 'validate-npm-package-name';
 
-export const createCommandFeatures = ['lint-staged', 'vitest', 'vitest-type-assert', 'release'] as const;
+export const createCommandFeatures = ['lint-staged', 'vitest', 'vitest-type-assert', 'release', 'coverage'] as const;
 export const createCommandFeatureChoices = ['all', 'recommended', ...createCommandFeatures] as const;
 
 export type CreateCommandFeature = typeof createCommandFeatures[number];
@@ -185,14 +185,34 @@ export async function createProject(
     options.files.push('.lintstagedrc.json', '.simple-git-hooks.json');
   }
 
+  let vitestConfigPlugings: string = '';
+  let vitestConfigTest: string = '';
+  let vitestImports: string = '';
+
+  if (options.features.includes('coverage')) {
+    options.devDependencies.push(['c8', '^7.12.0']);
+    vitestConfigTest = `test: { coverage: { reporter: ['text', 'lcov'] } },`;
+  }
+
+  if (options.features.includes('vitest-type-assert')) {
+    vitestImports = `import { vitestTypescriptAssertPlugin } from 'vite-plugin-vitest-typescript-assert';`;
+    vitestConfigPlugings = 'plugins: [vitestTypescriptAssertPlugin()],';
+  }
+
   if (options.features.includes('vitest') || options.features.includes('vitest-type-assert')) {
     options.devDependencies.push(['vitest', '^0.20.2']);
-    options.files.push('test/index.test.ts');
+    options.files.push(
+      {
+        file: 'vitest.config.ts',
+        tags: { vitestImports, vitestConfigTest, vitestConfigPlugings },
+      },
+      'test/index.test.ts',
+    );
   }
 
   if (options.features.includes('vitest-type-assert')) {
     options.devDependencies.push(['vite-plugin-vitest-typescript-assert', '^1.1.4']);
-    options.files.push('vitest.config.ts', 'test/types.test.ts');
+    options.files.push('test/types.test.ts');
   }
 
   options.files.push({
@@ -226,7 +246,7 @@ export async function createProject(
 
     if (tags) {
       content = content.replace(/{([a-z]+)}/gi, (_: string, tagName: string) => {
-        return tags[tagName] ?? tagName;
+        return tags[tagName] ?? '';
       });
     }
 

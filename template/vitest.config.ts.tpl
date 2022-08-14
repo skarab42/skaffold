@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitest/config';
-import { vitestTypescriptAssertPlugin } from 'vite-plugin-vitest-typescript-assert';
+{vitestImports}
 
 export default defineConfig({
-  plugins: [vitestTypescriptAssertPlugin()],
+  {vitestConfigPlugings}
+  {vitestConfigTest}
 });
