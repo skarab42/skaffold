@@ -21,35 +21,27 @@ pnpm add --global @skarab/skaffold
 ## Example
 
 ```bash
-skaffold create amazing-project
-cd ./amazing-project
+skaffold my-amazing-project
+cd ./my-amazing-project
 pnpm install
 pnpm update # optional
 ```
 
 ## Usage
 
-```bash
-Usage: skaffold create [options] [name]
+```ts
+Usage: skaffold [options] [command]
 
-Create a new project.
-
-If the package name is not provided, a random name will be generated.
-
-Arguments:
-  name                          a valid npm package name (default: "random")
+The best way to scaffold a project as I would do it myself (Kappa).
 
 Options:
-  -f, --features [features...]  features to includes (choices: "all", "recommended", "lint-staged", "vitest", "vitest-type-assert", "release", default: "all")
-  --user-name [name]            user name
-  --user-email [email]          user email
-  --min-node-version [version]  min node version
-  --min-pnpm-version [version]  min pnpm version
-  -p, --public                  public package (default: false)
-  -i, --interactive             interactive prompt (default: false)
-  --list-created-files          list created files (default: false)
-  --no-colors                   disable colors in output
-  -h, --help                    display help for command
+  -v, --version            output the version number
+  -h, --help               display help for command
+
+Commands:
+  init [options] [name]    initialize a (new) project
+  create [options] [name]  create a new project
+  help [command]           display help for command
 ```
 
 ## Before publishing

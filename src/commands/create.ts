@@ -50,6 +50,13 @@ export interface CreateCommandOptions extends Required<CreateCommandCommandLineO
 }
 
 export async function create(name: string, commandLineOptions: CreateCommandCommandLineOptions): Promise<void> {
+  await createProject(name, commandLineOptions);
+}
+
+export async function createProject(
+  name: string,
+  commandLineOptions: CreateCommandCommandLineOptions,
+): Promise<CreateCommandOptions | undefined> {
   let path = resolve(process.cwd(), name);
 
   if (name === 'random') {
@@ -251,6 +258,8 @@ export async function create(name: string, commandLineOptions: CreateCommandComm
   }
 
   util.printInfo('Done!', options.colors);
+
+  return options;
 }
 
 export async function createRootPath(options: CreateCommandOptions): Promise<boolean> {

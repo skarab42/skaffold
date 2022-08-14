@@ -9,6 +9,7 @@
   "scripts": {
     "prepare": "npx simple-git-hooks",
     "build": "tsc -p ./tsconfig.build.json",
+    "watch": "pnpm build --watch",
     "check": "tsc -p ./tsconfig.json",
     "lint": "eslint --max-warnings=0 .",
     "format": "prettier --check .",
