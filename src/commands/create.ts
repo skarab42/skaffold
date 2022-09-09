@@ -176,7 +176,7 @@ export async function createProject(
     '.prettierrc.json',
     'tsconfig.json',
     'tsconfig.build.json',
-    { file: 'tsconfig.check.json', tags: { exclude: JSON.stringify(tsConfigCheckExclude) } },
+    { file: 'tsconfig.check.json', tags: { exclude: JSON.stringify(tsConfigCheckExclude).replace(/,/g, ', ') } },
     { file: 'README.md', tags: { moduleName: options.shortName, packageName: options.name } },
     { file: 'LICENSE', tags: { date: new Date().getFullYear().toString(), ...gitUser } },
   ];
