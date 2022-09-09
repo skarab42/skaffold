@@ -157,6 +157,16 @@ export async function createProject(
     return;
   }
 
+  const tsConfigCheckExclude = ['lib'];
+
+  if (options.features.includes('coverage')) {
+    tsConfigCheckExclude.push('coverage');
+  }
+
+  if (options.features.includes('vitest-type-assert')) {
+    tsConfigCheckExclude.push('test');
+  }
+
   options.files = [
     'src/index.ts',
     '.eslintignore',
@@ -164,8 +174,9 @@ export async function createProject(
     '.gitignore',
     '.prettierignore',
     '.prettierrc.json',
-    'tsconfig.build.json',
     'tsconfig.json',
+    'tsconfig.build.json',
+    { file: 'tsconfig.check.json', tags: { exclude: JSON.stringify(tsConfigCheckExclude) } },
     { file: 'README.md', tags: { moduleName: options.shortName, packageName: options.name } },
     { file: 'LICENSE', tags: { date: new Date().getFullYear().toString(), ...gitUser } },
   ];

@@ -42,7 +42,7 @@ export function createPackageJSON(options: CreateCommandOptions): PackageJSON {
     files: ['lib'],
     scripts: {
       'build': 'tsc -p ./tsconfig.build.json',
-      'check': 'tsc -p ./tsconfig.json',
+      'check': 'tsc -p ./tsconfig.check.json',
       'lint': 'eslint --max-warnings=0 .',
       'format': 'prettier --check .',
       'check-lint-format': 'pnpm check && pnpm lint && pnpm format',
