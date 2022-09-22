@@ -201,7 +201,7 @@ export async function createProject(
   let vitestImports: string = '';
 
   if (options.features.includes('coverage')) {
-    options.devDependencies.push(['c8', '^7.12.0']);
+    options.devDependencies.push(['@vitest/coverage-c8', '^0.23.4']);
     vitestConfigTest = `test: { coverage: { reporter: ['text', 'lcov'] } },`;
   }
 
