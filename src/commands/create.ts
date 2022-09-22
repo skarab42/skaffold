@@ -182,13 +182,13 @@ export async function createProject(
   ];
 
   options.devDependencies = [
-    ['@skarab/eslint-config', '^1.1.0'],
+    ['@skarab/eslint-config', '^2.0.0'],
     ['@skarab/prettier-config', '^1.2.2'],
-    ['@skarab/typescript-config', '^1.1.0'],
-    ['@types/node', '^18.6.3'],
-    ['eslint', '^8.20.0'],
+    ['@skarab/typescript-config', '^1.3.1'],
+    ['@types/node', '^18.7.18'],
+    ['eslint', '^8.23.1'],
     ['prettier', '^2.7.1'],
-    ['typescript', '^4.7.4'],
+    ['typescript', '^4.8.3'],
   ];
 
   if (options.features.includes('lint-staged')) {
@@ -211,7 +211,7 @@ export async function createProject(
   }
 
   if (options.features.includes('vitest') || options.features.includes('vitest-type-assert')) {
-    options.devDependencies.push(['vitest', '^0.20.2']);
+    options.devDependencies.push(['vitest', '^0.23.4']);
     options.files.push(
       {
         file: 'vitest.config.ts',
@@ -232,7 +232,7 @@ export async function createProject(
   });
 
   if (options.features.includes('release')) {
-    options.devDependencies.push(['semantic-release', '^19.0.3']);
+    options.devDependencies.push(['semantic-release', '^19.0.5']);
     options.files.push({
       file: [
         '.github/workflows/test-release.yaml',
