@@ -15,12 +15,17 @@ export async function init(name: string, commandLineOptions: CreateCommandComman
 
   util.printInfo(`Initialize package "${name}" at "${path}".`, commandLineOptions.colors);
 
+  const gitDirectoryExists = existsSync(resolve(path, '.git'));
+
+  if (!gitDirectoryExists) {
+    await execAndPrint('git', ['init'], path, commandLineOptions);
+  }
+
   if (!existsSync(resolve(path, 'node_modules'))) {
     await execAndPrint('pnpm', ['install'], path, commandLineOptions);
   }
 
-  if (!existsSync(resolve(path, '.git'))) {
-    await execAndPrint('git', ['init'], path, commandLineOptions);
+  if (!gitDirectoryExists) {
     await execAndPrint('git', ['add', '--all'], path, commandLineOptions);
     await execAndPrint('git', ['commit', '-m', '"feat: skaffold"'], path, commandLineOptions);
     await execAndPrint('git', ['checkout', '-b', 'dev'], path, commandLineOptions);
