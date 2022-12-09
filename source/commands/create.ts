@@ -170,7 +170,7 @@ export async function createProject(
   }
 
   options.files = [
-    'src/index.ts',
+    'source/index.ts',
     '.eslintignore',
     '.eslintrc.json',
     '.gitignore',
