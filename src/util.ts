@@ -1,9 +1,10 @@
-import chalk from 'chalk';
-import fs from 'fs-extra';
-import semver from 'semver';
-import { execa } from 'execa';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import chalk from 'chalk';
+import { execa } from 'execa';
+import { opendir } from 'fs-extra';
+import { type SemVer, parse } from 'semver';
 
 export function metaDirname(url: string): string {
   return dirname(fileURLToPath(url));
@@ -32,7 +33,7 @@ export function printInfo(message: string, colors = true): void {
 export async function isEmptyDirectory(path: string): Promise<boolean> {
   let directory;
   try {
-    directory = await fs.opendir(path);
+    directory = await opendir(path);
     return (await directory.read()) === null;
   } catch {
     return false;
@@ -41,10 +42,10 @@ export async function isEmptyDirectory(path: string): Promise<boolean> {
   }
 }
 
-export interface GITUser {
+export type GITUser = {
   name: string;
   email: string;
-}
+};
 
 export async function getGitConfig(key: string): Promise<string> {
   const childProcess = await execa('git', ['config', key]);
@@ -56,8 +57,8 @@ export async function getGitUser(): Promise<GITUser> {
   return { name: await getGitConfig('user.name'), email: await getGitConfig('user.email') };
 }
 
-export async function getVersion(bin: string): Promise<semver.SemVer | undefined> {
+export async function getVersion(bin: string): Promise<SemVer | undefined> {
   const childProcess = await execa(bin, ['--version']);
 
-  return semver.parse(childProcess.stdout) ?? undefined;
+  return parse(childProcess.stdout) ?? undefined;
 }

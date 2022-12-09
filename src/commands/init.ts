@@ -1,10 +1,11 @@
-import * as util from '../util.js';
-import { resolve } from 'node:path';
 import { existsSync } from 'node:fs';
-import { createProject } from './create.js';
-import type { CreateCommandCommandLineOptions } from './create.js';
+import { resolve } from 'node:path';
 
 import { execa } from 'execa';
+
+import * as util from '../util.js';
+import type { CreateCommandCommandLineOptions } from './create.js';
+import { createProject } from './create.js';
 
 export async function init(name: string, commandLineOptions: CreateCommandCommandLineOptions): Promise<void> {
   const path = resolve(process.cwd(), name);

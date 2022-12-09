@@ -1,13 +1,15 @@
-import fs from 'fs-extra';
 import { resolve } from 'node:path';
+
 import * as commander from 'commander';
-import { metaDirname } from './util.js';
-import { init } from './commands/init.js';
+import { readJsonSync } from 'fs-extra';
+
 import { create, createCommandFeatureChoices } from './commands/create.js';
+import { init } from './commands/init.js';
+import { metaDirname } from './util.js';
 
 const program = new commander.Command();
 
-const { version } = fs.readJsonSync(resolve(metaDirname(import.meta.url), '../package.json')) as {
+const { version } = readJsonSync(resolve(metaDirname(import.meta.url), '../package.json')) as {
   version: string;
 };
 

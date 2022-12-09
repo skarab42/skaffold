@@ -1,10 +1,12 @@
-import fs from 'fs-extra';
-import inquirer from 'inquirer';
-import * as util from '../util.js';
 import { basename, resolve } from 'node:path';
-import { createPackageJSON } from './create/package.js';
+
+import { existsSync, mkdirSync, outputFileSync, readFileSync, writeJsonSync } from 'fs-extra';
+import inquirer from 'inquirer';
 import projectNameGenerator from 'project-name-generator';
 import validateNpmPackageName from 'validate-npm-package-name';
+
+import * as util from '../util.js';
+import { createPackageJSON } from './create/package.js';
 
 export const createCommandFeatures = ['lint-staged', 'vitest', 'vitest-type-assert', 'release', 'coverage'] as const;
 export const createCommandFeatureChoices = ['all', 'recommended', ...createCommandFeatures] as const;
@@ -12,34 +14,34 @@ export const createCommandFeatureChoices = ['all', 'recommended', ...createComma
 export type CreateCommandFeature = typeof createCommandFeatures[number];
 export type CreateCommandFeatureChoices = typeof createCommandFeatureChoices[number];
 
-export interface CreateCommandBaseOptions {
+export type CreateCommandBaseOptions = {
   userName?: string;
   userEmail?: string;
   minNodeVersion?: string;
   minPnpmVersion?: string;
   features: 'all' | 'recommended' | readonly CreateCommandFeatureChoices[];
-}
+};
 
-export interface CreateCommandCommandLineOptions extends CreateCommandBaseOptions {
+export type CreateCommandCommandLineOptions = {
   colors: boolean;
   public: boolean;
   interactive: boolean;
   listCreatedFiles: boolean;
-}
+} & CreateCommandBaseOptions;
 
-export interface CreateCommandInteractiveOptions {
+export type CreateCommandInteractiveOptions = {
   name: string;
   options: Required<CreateCommandBaseOptions>;
-}
+};
 
-export interface FileRecord {
+export type FileRecord = {
   file: string | [string, ...string[]];
   tags: Record<string, string>;
-}
+};
 
 export type File = string | FileRecord;
 
-export interface CreateCommandOptions extends Required<CreateCommandCommandLineOptions> {
+export type CreateCommandOptions = {
   path: string;
   name: string;
   shortName: string;
@@ -47,7 +49,7 @@ export interface CreateCommandOptions extends Required<CreateCommandCommandLineO
   pnpmVersion: string;
   devDependencies: [string, string][];
   files: File[];
-}
+} & Required<CreateCommandCommandLineOptions>;
 
 export async function create(name: string, commandLineOptions: CreateCommandCommandLineOptions): Promise<void> {
   await createProject(name, commandLineOptions);
@@ -196,9 +198,9 @@ export async function createProject(
     options.files.push('.lintstagedrc.json', '.simple-git-hooks.json');
   }
 
-  let vitestConfigPlugings: string = '';
-  let vitestConfigTest: string = '';
-  let vitestImports: string = '';
+  let vitestConfigPlugings = '';
+  let vitestConfigTest = '';
+  let vitestImports = '';
 
   if (options.features.includes('coverage')) {
     options.devDependencies.push(['@vitest/coverage-c8', '^0.23.4']);
@@ -246,13 +248,13 @@ export async function createProject(
 
   const templatePath = resolve(util.metaDirname(import.meta.url), '../../template');
 
-  fs.writeJsonSync(resolve(options.path, 'package.json'), createPackageJSON(options), { spaces: 2 });
+  writeJsonSync(resolve(options.path, 'package.json'), createPackageJSON(options), { spaces: 2 });
 
   function getFileContent(files: string[], tags?: Record<string, string> | undefined): string {
     let content = '';
 
     for (const file of files) {
-      content += fs.readFileSync(resolve(templatePath, `${file}.tpl`), 'utf8');
+      content += readFileSync(resolve(templatePath, `${file}.tpl`), 'utf8');
     }
 
     if (tags) {
@@ -281,7 +283,7 @@ export async function createProject(
 
     const filepath = resolve(options.path, name);
 
-    fs.outputFileSync(filepath, content);
+    outputFileSync(filepath, content);
 
     if (options.listCreatedFiles) {
       util.printInfo(`FILE: ${filepath}`, options.colors);
@@ -294,8 +296,8 @@ export async function createProject(
 }
 
 export async function createRootPath(options: CreateCommandOptions): Promise<boolean> {
-  if (!fs.existsSync(options.path)) {
-    fs.mkdirSync(options.path, { recursive: true });
+  if (!existsSync(options.path)) {
+    mkdirSync(options.path, { recursive: true });
 
     return true;
   }

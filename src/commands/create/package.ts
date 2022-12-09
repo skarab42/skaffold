@@ -1,10 +1,10 @@
 import type { CreateCommandOptions } from '../create.js';
 
-interface PackageJSON {
+type PackageJSON = {
   [x: string]: unknown;
   scripts: Record<string, string>;
   devDependencies: Record<string, string>;
-}
+};
 
 export function createPackageJSON(options: CreateCommandOptions): PackageJSON {
   const gitRepo = `${options.userName}/${options.shortName}`;
