@@ -184,17 +184,17 @@ export async function createProject(
   ];
 
   options.devDependencies = [
-    ['@skarab/eslint-config', '^2.0.0'],
+    ['@skarab/eslint-config', '^3.1.0'],
     ['@skarab/prettier-config', '^1.2.2'],
-    ['@skarab/typescript-config', '^1.3.1'],
-    ['@types/node', '^18.7.18'],
-    ['eslint', '^8.23.1'],
-    ['prettier', '^2.7.1'],
-    ['typescript', '^4.8.3'],
+    ['@skarab/typescript-config', '^2.0.0'],
+    ['@types/node', '^18.11.12'],
+    ['eslint', '^8.29.0'],
+    ['prettier', '^2.8.1'],
+    ['typescript', '^4.9.4'],
   ];
 
   if (options.features.includes('lint-staged')) {
-    options.devDependencies.push(['lint-staged', '^13.0.3'], ['simple-git-hooks', '^2.8.0']);
+    options.devDependencies.push(['lint-staged', '^13.1.0'], ['simple-git-hooks', '^2.8.1']);
     options.files.push('.lintstagedrc.json', '.simple-git-hooks.json');
   }
 
@@ -203,7 +203,7 @@ export async function createProject(
   let vitestImports = '';
 
   if (options.features.includes('coverage')) {
-    options.devDependencies.push(['@vitest/coverage-c8', '^0.23.4']);
+    options.devDependencies.push(['@vitest/coverage-c8', '^0.25.6']);
     vitestConfigTest = `test: { coverage: { reporter: ['text', 'lcov'] } },`;
   }
 
@@ -213,7 +213,7 @@ export async function createProject(
   }
 
   if (options.features.includes('vitest') || options.features.includes('vitest-type-assert')) {
-    options.devDependencies.push(['vitest', '^0.23.4']);
+    options.devDependencies.push(['vitest', '^0.25.6']);
     options.files.push(
       {
         file: 'vitest.config.ts',
