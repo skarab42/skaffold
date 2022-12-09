@@ -1,6 +1,6 @@
 import { basename, resolve } from 'node:path';
 
-import { existsSync, mkdirSync, outputFileSync, readFileSync, writeJsonSync } from 'fs-extra';
+import fs from 'fs-extra';
 import inquirer from 'inquirer';
 import projectNameGenerator from 'project-name-generator';
 import validateNpmPackageName from 'validate-npm-package-name';
@@ -184,9 +184,9 @@ export async function createProject(
   ];
 
   options.devDependencies = [
-    ['@skarab/eslint-config', '^3.1.0'],
+    ['@skarab/eslint-config', '^3.2.0'],
     ['@skarab/prettier-config', '^1.2.2'],
-    ['@skarab/typescript-config', '^2.0.0'],
+    ['@skarab/typescript-config', '^2.1.0'],
     ['@types/node', '^18.11.12'],
     ['eslint', '^8.29.0'],
     ['prettier', '^2.8.1'],
@@ -248,13 +248,13 @@ export async function createProject(
 
   const templatePath = resolve(util.metaDirname(import.meta.url), '../../template');
 
-  writeJsonSync(resolve(options.path, 'package.json'), createPackageJSON(options), { spaces: 2 });
+  fs.writeJsonSync(resolve(options.path, 'package.json'), createPackageJSON(options), { spaces: 2 });
 
   function getFileContent(files: string[], tags?: Record<string, string> | undefined): string {
     let content = '';
 
     for (const file of files) {
-      content += readFileSync(resolve(templatePath, `${file}.tpl`), 'utf8');
+      content += fs.readFileSync(resolve(templatePath, `${file}.tpl`), 'utf8');
     }
 
     if (tags) {
@@ -283,7 +283,7 @@ export async function createProject(
 
     const filepath = resolve(options.path, name);
 
-    outputFileSync(filepath, content);
+    fs.outputFileSync(filepath, content);
 
     if (options.listCreatedFiles) {
       util.printInfo(`FILE: ${filepath}`, options.colors);
@@ -296,8 +296,8 @@ export async function createProject(
 }
 
 export async function createRootPath(options: CreateCommandOptions): Promise<boolean> {
-  if (!existsSync(options.path)) {
-    mkdirSync(options.path, { recursive: true });
+  if (!fs.existsSync(options.path)) {
+    fs.mkdirSync(options.path, { recursive: true });
 
     return true;
   }

@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import chalk from 'chalk';
 import { execa } from 'execa';
-import { opendir } from 'fs-extra';
+import fs from 'fs-extra';
 import { type SemVer, parse } from 'semver';
 
 export function metaDirname(url: string): string {
@@ -33,7 +33,7 @@ export function printInfo(message: string, colors = true): void {
 export async function isEmptyDirectory(path: string): Promise<boolean> {
   let directory;
   try {
-    directory = await opendir(path);
+    directory = await fs.opendir(path);
     return (await directory.read()) === null;
   } catch {
     return false;

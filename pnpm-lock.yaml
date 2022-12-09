@@ -1,9 +1,9 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@skarab/eslint-config': ^3.1.0
+  '@skarab/eslint-config': ^3.2.0
   '@skarab/prettier-config': ^1.2.2
-  '@skarab/typescript-config': ^2.0.0
+  '@skarab/typescript-config': ^2.1.0
   '@types/fs-extra': ^9.0.13
   '@types/inquirer': ^9.0.3
   '@types/node': ^18.11.12
@@ -36,9 +36,9 @@ dependencies:
   validate-npm-package-name: 5.0.0
 
 devDependencies:
-  '@skarab/eslint-config': 3.1.0_ha6vam6werchizxrnqvarmz2zu
+  '@skarab/eslint-config': 3.2.0_ha6vam6werchizxrnqvarmz2zu
   '@skarab/prettier-config': 1.2.2_prettier@2.8.1
-  '@skarab/typescript-config': 2.0.0
+  '@skarab/typescript-config': 2.1.0
   '@types/fs-extra': 9.0.13
   '@types/inquirer': 9.0.3
   '@types/node': 18.11.12
@@ -381,8 +381,8 @@ packages:
       - supports-color
     dev: true
 
-  /@skarab/eslint-config/3.1.0_ha6vam6werchizxrnqvarmz2zu:
-    resolution: {integrity: sha512-4OmBHsYRl8F80JDeKjW5cTIwu2A+Zj3EvSzW2bVflWQScNX8HBznG+dNtFKj7+50tN9noWi+quUlx3mx5rZJVQ==}
+  /@skarab/eslint-config/3.2.0_ha6vam6werchizxrnqvarmz2zu:
+    resolution: {integrity: sha512-YleMxOmEQwKGRSLCfMjfWlEQY081+8e1wvWNgvLvIcNM42GGOBkkuZrnL70pRzA5Bl/H9k5MouvWDCU4JRyphQ==}
     engines: {node: '>=14', pnpm: '>=7'}
     peerDependencies:
       eslint: '>=8'
@@ -415,8 +415,8 @@ packages:
       prettier: 2.8.1
     dev: true
 
-  /@skarab/typescript-config/2.0.0:
-    resolution: {integrity: sha512-3LsitYrD3qk+M6KSALJsgBAtaHyD1ETvJB7TbqPS0Sai1WHOk8fXzl5zQB9UUgCCPQfLhRT3+HmcPtBKHi+F5A==}
+  /@skarab/typescript-config/2.1.0:
+    resolution: {integrity: sha512-G4JZVcICmS/B0Ekh+uJI3Tceb/QPFUYwAlQDmlnSOKxbTi0t+78OdvfU1IxjxkwZ8IaF2qxkToue6djoADrPtw==}
     engines: {node: '>=14', pnpm: '>=7'}
     dev: true
 

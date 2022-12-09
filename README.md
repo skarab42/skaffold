@@ -76,4 +76,3 @@ It's all good 🚀 the next time you push on the main branch your package will b
 
 - [@skarab/eslint-config](https://github.com/skarab42/eslint-config)
 - [@skarab/prettier-config](https://github.com/skarab42/prettier-config)
-- [@skarab/typescript-config](https://github.com/skarab42/typescript-config)
