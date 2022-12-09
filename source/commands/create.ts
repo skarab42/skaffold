@@ -159,7 +159,7 @@ export async function createProject(
     return;
   }
 
-  const tsConfigCheckExclude = ['lib'];
+  const tsConfigCheckExclude = ['build'];
 
   if (options.features.includes('coverage')) {
     tsConfigCheckExclude.push('coverage');

@@ -33,13 +33,13 @@ export function createPackageJSON(options: CreateCommandOptions): PackageJSON {
     funding: `https://github.com/sponsors/${options.userName}`,
     license: 'MIT',
     type: 'module',
-    exports: './lib/index.js',
-    types: './lib/index.d.ts',
+    exports: './build/index.js',
+    types: './build/index.d.ts',
     private: !options.public,
     publishConfig: {
       access: options.public ? 'public' : 'restricted',
     },
-    files: ['lib'],
+    files: ['build'],
     scripts: {
       'build': 'tsc -p ./tsconfig.build.json',
       'check': 'tsc -p ./tsconfig.check.json',

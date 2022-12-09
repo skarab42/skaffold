@@ -1,6 +1,6 @@
 {
   "extends": "@skarab/typescript-config",
-  "exclude": ["lib", "coverage"],
+  "exclude": ["build", "coverage"],
   "compilerOptions": {
     "noEmit": true,
     "module": "es2022",

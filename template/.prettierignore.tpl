@@ -1,5 +1,5 @@
 node_modules
 coverage
-lib
+build
 
 pnpm-lock.yaml
