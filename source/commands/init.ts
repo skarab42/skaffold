@@ -28,7 +28,7 @@ export async function init(name: string, commandLineOptions: CreateCommandComman
 
   if (!gitDirectoryExists) {
     await execAndPrint('git', ['add', '--all'], path, commandLineOptions);
-    await execAndPrint('git', ['commit', '-m', '"feat: skaffold"'], path, commandLineOptions);
+    await execAndPrint('git', ['commit', '-m', 'feat: skaffold'], path, commandLineOptions);
     await execAndPrint('git', ['checkout', '-b', 'dev'], path, commandLineOptions);
   }
 
