@@ -8,10 +8,17 @@ import type { CreateCommandCommandLineOptions } from './create.js';
 import { createProject } from './create.js';
 
 export async function init(name: string, commandLineOptions: CreateCommandCommandLineOptions): Promise<void> {
-  const path = resolve(process.cwd(), name);
+  let path = resolve(process.cwd(), name);
 
-  if (!existsSync(path) && !(await createProject(name, commandLineOptions))) {
-    return;
+  if (!existsSync(path)) {
+    const createOptions = await createProject(name, commandLineOptions);
+
+    if (!createOptions) {
+      return;
+    }
+
+    name = createOptions.name;
+    path = createOptions.path;
   }
 
   util.printInfo(`Initialize package "${name}" at "${path}".`, commandLineOptions.colors);
