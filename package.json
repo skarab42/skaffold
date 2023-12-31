@@ -9,10 +9,7 @@
   },
   "funding": "https://github.com/sponsors/skarab42",
   "homepage": "https://github.com/skarab42/skaffold",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/skarab42/skaffold.git"
-  },
+  "repository": "https://github.com/skarab42/skaffold",
   "bugs": "https://github.com/skarab42/skaffold/issues",
   "type": "module",
   "module": "./output/lib/index.js",

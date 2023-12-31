@@ -12,6 +12,25 @@ type Author =
 export type PackageJson = {
   name?: string;
   author?: Author;
+  version?: string;
+  description?: string;
+  license?: string;
+  funding?: string;
+  homepage?: string;
+  repository?: string;
+  bugs?: string;
+  type?: 'module' | 'commonjs';
+  module?: string;
+  types?: string;
+  private?: boolean;
+  publishConfig?: {
+    access: 'public' | 'restricted';
+  };
+  files?: string[];
+  keywords?: string[] | undefined;
+  scripts?: Record<string, string>;
+  dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
 };
 
 export type PackageJsonRootKey = keyof PackageJson;

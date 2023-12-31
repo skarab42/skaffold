@@ -4,11 +4,15 @@
 import { isFailure, unwrap } from '../lib/result.js';
 import { skaffold } from '../lib/skaffold.js';
 
-const overwrite = true;
-const projectName = '@prout/in-the-wild';
-const projectPath = `.skaffolded/${projectName}`;
-
-const skaffoldResult = await skaffold({ overwrite, projectName, projectPath });
+const skaffoldResult = await skaffold({
+  overwrite: true,
+  projectName: '@prout/in-the-wild',
+  projectPath: `.skaffolded/@prout/in-the-wild`,
+  funding: 'https://github.com/sponsors/skarab42',
+  homepage: 'https://github.com/skarab42/skaffold',
+  repository: 'https://github.com/skarab42/skaffold',
+  bugs: 'https://github.com/skarab42/skaffold/issues',
+});
 
 if (isFailure(skaffoldResult)) {
   const errors = unwrap(skaffoldResult);

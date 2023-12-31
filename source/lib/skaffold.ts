@@ -7,7 +7,14 @@ export type SkaffoldOptions = {
   overwrite?: boolean | undefined;
   projectName?: string | undefined;
   projectPath?: string | undefined;
+  description?: string | undefined;
+  license?: string | undefined;
   author?: PackageJson['author'] | undefined;
+  funding?: string | undefined;
+  homepage?: string | undefined;
+  repository?: string | undefined;
+  bugs?: string | undefined;
+  type?: 'module' | 'commonjs' | undefined;
 };
 
 export type SkaffoldSuccess = {
