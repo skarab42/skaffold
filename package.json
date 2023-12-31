@@ -49,6 +49,7 @@
     "skaffold:dev": "node ./output/bin/skaffold.js"
   },
   "dependencies": {
+    "execa": "^8.0.1",
     "fs-extra": "^11.2.0",
     "validate-npm-package-name": "^5.0.0"
   },

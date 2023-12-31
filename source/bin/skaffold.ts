@@ -1,17 +1,25 @@
+/* eslint-disable unicorn/no-process-exit */
+/* eslint-disable n/no-process-exit */
 /* eslint-disable no-console */
 import { isFailure, unwrap } from '../lib/result.js';
 import { skaffold } from '../lib/skaffold.js';
 
 const overwrite = true;
-const projectName = 'prout';
-const projectPath = '@prout/test';
+const projectName = '@prout/in-the-wild';
+const projectPath = `.skaffolded/${projectName}`;
 
-const result = skaffold({ overwrite, projectName, projectPath });
+const skaffoldResult = await skaffold({ overwrite, projectName, projectPath });
 
-if (isFailure(result)) {
-  const errors = unwrap(result);
+if (isFailure(skaffoldResult)) {
+  const errors = unwrap(skaffoldResult);
   console.error('> error:', errors);
-  process.exitCode = 1;
-} else {
-  console.log('> Done!');
+  process.exit(1);
 }
+
+const { config, build } = unwrap(skaffoldResult);
+
+console.log('> build:', config);
+
+build();
+
+console.log('> Done!');
