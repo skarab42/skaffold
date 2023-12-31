@@ -15,6 +15,7 @@ export type SkaffoldOptions = {
   repository?: string | undefined;
   bugs?: string | undefined;
   type?: 'module' | 'commonjs' | undefined;
+  ts?: boolean | undefined;
 };
 
 export type SkaffoldSuccess = {

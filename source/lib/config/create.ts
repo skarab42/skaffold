@@ -18,9 +18,11 @@ export async function createConfig(options: SkaffoldOptions): Promise<SkaffoldCo
   const projectPath = path.resolve(options.projectPath ?? path.join(process.cwd(), projectName));
   const homepage = options.homepage ?? options.repository;
   const type = options.type ?? 'module';
+  const ts = options.ts ?? true;
 
   return {
     ...options,
+    ts,
     type,
     homepage,
     overwrite,

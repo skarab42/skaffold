@@ -5,6 +5,7 @@ import { isFailure, unwrap } from '../lib/result.js';
 import { skaffold } from '../lib/skaffold.js';
 
 const skaffoldResult = await skaffold({
+  ts: false,
   overwrite: true,
   projectName: '@prout/in-the-wild',
   projectPath: `.skaffolded/@prout/in-the-wild`,
