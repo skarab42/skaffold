@@ -1,0 +1,81 @@
+{
+  "name": "@skarab/skaffold",
+  "description": "The best way to scaffold a project as I would do it myself (Kappa)",
+  "version": "0.0.0-development",
+  "license": "MIT",
+  "author": {
+    "name": "skarab42",
+    "email": "contact@skarab42.dev"
+  },
+  "funding": "https://github.com/sponsors/skarab42",
+  "homepage": "https://github.com/skarab42/skaffold",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/skarab42/skaffold.git"
+  },
+  "bugs": "https://github.com/skarab42/skaffold/issues",
+  "type": "module",
+  "module": "./output/lib/index.js",
+  "types": "./output/lib/index.d.ts",
+  "bin": {
+    "skaffold": "./output/bin/skaffold.js"
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "output"
+  ],
+  "keywords": [
+    "scaffold",
+    "library",
+    "package",
+    "project",
+    "publish",
+    "build",
+    "test",
+    "lint"
+  ],
+  "scripts": {
+    "prepare": "npx simple-git-hooks",
+    "lint": "eslint . --max-warnings=0",
+    "lint:fix": "pnpm lint --fix",
+    "format": "prettier **/* --ignore-unknown",
+    "format:write": "pnpm format --write",
+    "check": "tsc -p ./tsconfig.json",
+    "build": "rimraf ./output && tsc -p ./tsconfig.build.json",
+    "build:watch": "pnpm build --watch",
+    "skaffold:dev": "node ./output/bin/skaffold.js"
+  },
+  "devDependencies": {
+    "@skarab/eslint-config": "^4.0.0",
+    "@skarab/prettier-config": "^1.2.2",
+    "@skarab/typescript-config": "^3.1.0",
+    "@types/node": "^20.10.6",
+    "eslint": "^8.56.0",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.1",
+    "rimraf": "^5.0.5",
+    "simple-git-hooks": "^2.9.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
+  },
+  "packageManager": "pnpm@8.12.1",
+  "prettier": "@skarab/prettier-config",
+  "lint-staged": {
+    "*": [
+      "pnpm eslint-staged --fix --max-warnings=0",
+      "pnpm prettier --write --ignore-unknown"
+    ]
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "eslintConfig": {
+    "extends": "@skarab/eslint-config/recommended"
+  }
+}
