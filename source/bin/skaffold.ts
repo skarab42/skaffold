@@ -2,10 +2,11 @@
 import { isFailure, unwrap } from '../lib/result.js';
 import { skaffold } from '../lib/skaffold.js';
 
-const projectName = undefined;
-const projectPath = undefined;
+const overwrite = true;
+const projectName = 'prout';
+const projectPath = '@prout/test';
 
-const result = skaffold({ projectName, projectPath });
+const result = skaffold({ overwrite, projectName, projectPath });
 
 if (isFailure(result)) {
   const errors = unwrap(result);

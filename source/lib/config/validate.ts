@@ -25,10 +25,16 @@ export function validateProjectName(projectName: string): Result<string, string[
 export function validateProjectPath(projectPath: string): Result<string, string[]> {
   const errors: string[] = [];
 
-  if (fs.existsSync(projectPath) === true && isDirectoryEmpty(projectPath) === false) {
+  if (fs.existsSync(projectPath) === false) {
+    return success(projectPath);
+  }
+
+  if (isDirectoryEmpty(projectPath) === false) {
     errors.push(
       `The project path '${projectPath}' already exists and is not an empty directory.`,
-      ` - You can choose another project name/path or you can rename/move/delete the destination directory.`,
+      ` - You can choose another project name or path.`,
+      ` - You can rename or move the destination directory.`,
+      ` - You can set the 'overwrite' settings to 'true' (at your own risk).`,
     );
   }
 
@@ -39,14 +45,17 @@ export function validateConfig(config: SkaffoldConfig): Result<SkaffoldConfig, s
   const errors: string[] = [];
 
   const projectNameResult = validateProjectName(config.projectName);
-  const projectPathResult = validateProjectPath(config.projectPath);
 
   if (isFailure(projectNameResult)) {
     errors.push(...unwrap(projectNameResult));
   }
 
-  if (isFailure(projectPathResult)) {
-    errors.push(...unwrap(projectPathResult));
+  if (config.overwrite === false) {
+    const projectPathResult = validateProjectPath(config.projectPath);
+
+    if (isFailure(projectPathResult)) {
+      errors.push(...unwrap(projectPathResult));
+    }
   }
 
   return errors.length > 0 ? failure(errors) : success(config);

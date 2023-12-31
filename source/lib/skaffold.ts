@@ -3,6 +3,7 @@ import { createConfig, validateConfig } from './config/index.js';
 import { failure, isFailure, type Result, success, unwrap } from './result.js';
 
 export type SkaffoldOptions = {
+  overwrite?: boolean | undefined;
   projectName?: string | undefined;
   projectPath?: string | undefined;
 };
