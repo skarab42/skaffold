@@ -10,9 +10,9 @@ export type SkaffoldOptions = {
   description?: string | undefined;
   license?: string | undefined;
   author?: PackageJson['author'] | undefined;
-  funding?: string | undefined;
-  homepage?: string | undefined;
+  funding?: string | boolean | undefined;
   repository?: string | undefined;
+  homepage?: string | undefined;
   bugs?: string | undefined;
   type?: 'module' | 'commonjs' | undefined;
   ts?: boolean | undefined;

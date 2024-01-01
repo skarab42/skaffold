@@ -10,27 +10,33 @@ type Author =
     };
 
 export type PackageJson = {
-  name?: string;
-  author?: Author;
-  version?: string;
-  description?: string;
-  license?: string;
-  funding?: string;
-  homepage?: string;
-  repository?: string;
-  bugs?: string;
-  type?: 'module' | 'commonjs';
-  module?: string;
-  types?: string;
-  private?: boolean;
-  publishConfig?: {
+  'name'?: string;
+  'author'?: Author;
+  'version'?: string;
+  'description'?: string;
+  'license'?: string;
+  'funding'?: string;
+  'homepage'?: string;
+  'repository'?: string;
+  'bugs'?: string;
+  'type'?: 'module' | 'commonjs';
+  'module'?: string;
+  'types'?: string;
+  'private'?: boolean;
+  'publishConfig'?: {
     access: 'public' | 'restricted';
   };
-  files?: string[];
-  keywords?: string[] | undefined;
-  scripts?: Record<string, string>;
-  dependencies?: Record<string, string>;
-  devDependencies?: Record<string, string>;
+  'files'?: string[];
+  'keywords'?: string[] | undefined;
+  'scripts'?: Record<string, string>;
+  'dependencies'?: Record<string, string>;
+  'devDependencies'?: Record<string, string>;
+  'engines'?: Record<string, string>;
+  'packageManager'?: string;
+  'prettier'?: string;
+  'eslintConfig'?: Record<string, string>;
+  'lint-staged'?: Record<string, string[]>;
+  'simple-git-hooks'?: Record<string, string>;
 };
 
 export type PackageJsonRootKey = keyof PackageJson;

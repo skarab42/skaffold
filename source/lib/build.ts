@@ -62,6 +62,19 @@ export function build(config: SkaffoldConfig): Result<true, string[]> {
     }),
   });
 
+  packageJsonFactory.set('packageManager', `pnpm@${config.versions.pnpm}`);
+  packageJsonFactory.set('engines', {
+    node: `>=${config.versions.node}`,
+    pnpm: `>=${config.versions.pnpm}`,
+  });
+
+  packageJsonFactory.set('prettier', '@skarab/prettier-config');
+  packageJsonFactory.set('eslintConfig', { extends: '@skarab/eslint-config/recommended' });
+  packageJsonFactory.set('simple-git-hooks', { 'pre-commit': 'pnpm lint-staged' });
+  packageJsonFactory.set('lint-staged', {
+    '*': ['pnpm eslint-staged --fix --max-warnings=0', 'pnpm prettier --write --ignore-unknown'],
+  });
+
   packageJsonFactory.write();
 
   return success(true);

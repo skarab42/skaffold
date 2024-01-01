@@ -5,14 +5,15 @@ import { isFailure, unwrap } from '../lib/result.js';
 import { skaffold } from '../lib/skaffold.js';
 
 const skaffoldResult = await skaffold({
-  ts: false,
+  ts: true,
   overwrite: true,
   projectName: '@prout/in-the-wild',
   projectPath: `.skaffolded/@prout/in-the-wild`,
-  funding: 'https://github.com/sponsors/skarab42',
-  homepage: 'https://github.com/skarab42/skaffold',
+  funding: true,
+  // funding: 'https://paypal.me/skarab42',
+  homepage: 'https://github.com/skarab42/skaffold/readme.md',
   repository: 'https://github.com/skarab42/skaffold',
-  bugs: 'https://github.com/skarab42/skaffold/issues',
+  bugs: 'https://github.com/skarab42/skaffold/bugssss',
 });
 
 if (isFailure(skaffoldResult)) {

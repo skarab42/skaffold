@@ -1,4 +1,27 @@
+import { execa } from 'execa';
 import fs from 'fs-extra';
+import { parse, type SemVer } from 'semver';
+
+export type GitUser = {
+  name: string;
+  email: string;
+};
+
+export async function getGitConfig(key: string): Promise<string> {
+  const childProcess = await execa('git', ['config', key]);
+
+  return childProcess.stdout.trim();
+}
+
+export async function getGitUser(): Promise<GitUser> {
+  return { name: await getGitConfig('user.name'), email: await getGitConfig('user.email') };
+}
+
+export async function getVersion(bin: string): Promise<SemVer | undefined> {
+  const childProcess = await execa(bin, ['--version']);
+
+  return parse(childProcess.stdout) ?? undefined;
+}
 
 export type RequiredStrict<T> = { [P in keyof T]-?: Exclude<T[P], undefined> };
 
