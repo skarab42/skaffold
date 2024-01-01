@@ -1,4 +1,2 @@
-export * from './config/index.js';
-export * from './result.js';
-export * from './skaffold.js';
-export * from './utils.js';
+// eslint-disable-next-line no-console
+console.log('lib/index.ts');
