@@ -38,11 +38,8 @@ function getFunding({ funding }: SkaffoldOptions, authorName?: string | undefine
 }
 
 export async function createConfig(options: SkaffoldOptions): Promise<SkaffoldConfig> {
-  const overwrite = options.overwrite ?? false;
   const author = options.author ?? (await getGitUser());
   const authorName = typeof author === 'string' ? author : author.name;
-  const license = options.license ?? 'MIT';
-  const description = options.description ?? 'My awesome project';
   const projectName = options.projectName ?? randomProjectName();
   const projectPath = path.resolve(options.projectPath ?? path.join(process.cwd(), projectName));
   const bugs = options.bugs ?? (options.repository ? `${options.repository}/issues` : undefined);
@@ -54,17 +51,17 @@ export async function createConfig(options: SkaffoldOptions): Promise<SkaffoldCo
 
   return {
     ...options,
+    overwrite: options.overwrite ?? false,
+    license: options.license ?? 'MIT',
+    description: options.projectName ?? randomProjectName(),
     bugs,
     funding,
     versions,
     ts,
     type,
     homepage,
-    overwrite,
     author,
     authorName,
-    license,
-    description,
     projectName,
     projectPath,
   };

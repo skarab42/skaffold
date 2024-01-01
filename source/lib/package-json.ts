@@ -41,6 +41,10 @@ export type PackageJson = {
 
 export type PackageJsonRootKey = keyof PackageJson;
 
+export function conditional<Value extends object>(condition: boolean, returnValue: Value): Value | undefined {
+  return condition ? returnValue : undefined;
+}
+
 export class PackageJsonFactory {
   #outputJson: PackageJson;
   #outputPath: string;
@@ -52,6 +56,14 @@ export class PackageJsonFactory {
 
   set<Key extends PackageJsonRootKey>(key: Key, value: PackageJson[Key]): void {
     this.#outputJson[key] = value;
+  }
+
+  optional<Key extends PackageJsonRootKey>(key: Key, value: PackageJson[Key]): void {
+    value && this.set(key, value);
+  }
+
+  conditional<Key extends PackageJsonRootKey>(condition: unknown, key: Key, value: PackageJson[Key]): void {
+    condition && this.set(key, value);
   }
 
   write(): void {
