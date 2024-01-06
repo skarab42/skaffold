@@ -1,0 +1,107 @@
+{ 
+  "name": "{{project.name}}",
+  "description": "My skaffolded project",
+  "version": "0.0.0-development",
+  "license": "MIT",
+{{#if (isDefined user.name user.email)}}
+  "author": {
+    "name": "{{user.name}}",
+    "email": "{{user.email}}"
+  },
+{{else if (isDefined user.name)}}
+  "author": "{{user.name}}",
+{{/if}}
+{{#if user.name}}
+  "funding": "https://github.com/sponsors/{{user.name}}",
+  "homepage": "https://github.com/{{user.name}}/{{project.identifier}}",
+  "repository": "https://github.com/{{user.name}}/{{project.identifier}}",
+  "bugs": "https://github.com/{{user.name}}/{{project.identifier}}/issues",
+{{/if}}
+  "type": "{{type}}",
+{{#if (isType 'module')}}
+  "module": "./output/index.js",
+  "types": "./output/index.d.ts",
+{{else}}
+  "main": "./output/index.js",
+{{/if}}
+{{#if (hasFeature 'bin')}}
+  "bin": "./output/bin/index.js",
+{{/if}}
+  "private": true,
+  "publishConfig": {
+    "access": "restricted"
+  }, 
+  "files": [
+    "output"
+  ],
+  "keywords": [
+    "skaffold"
+  ],
+  "scripts": {
+    "prepare": "npx simple-git-hooks",
+    "clean": "rimraf ./output",
+    "lint": "eslint . --max-warnings=0",
+    "lint:fix": "pnpm lint --fix",
+    "format": "pnpm format:run --check",
+    "format:run": "prettier **/* --ignore-unknown",
+    "format:write": "pnpm format:run --write",
+    "build": "pnpm clean && tsc -p ./tsconfig.build.json",
+    "build:check": "tsc -p ./tsconfig.json",
+    "build:watch": "pnpm build --watch",
+  {{#if (hasFeature 'test')}}
+    "test": "pnpm vitest run",
+    "test:watch": "pnpm vitest watch",
+  {{/if}}
+  {{#if (hasFeature 'test' 'coverage')}}
+    "test:coverage": "pnpm vitest run --coverage",
+  {{/if}}
+  {{#if (hasFeature 'release')}}
+    "release": "semantic-release --branches main",
+  {{/if}}
+  {{#if (hasFeature 'bin')}}
+    "bin:{{project.identifier}}": "node ./output/bin/index.js",
+  {{/if}}
+  },
+  "devDependencies": {
+    "@skarab/eslint-config": "^4.1.1",
+    "@skarab/prettier-config": "^1.2.2",
+    "@skarab/typescript-config": "^3.1.0",
+  {{#if (hasFeature 'bin')}}
+    "@types/node": "^20.10.6",
+  {{/if}}
+  {{#if (hasFeature 'test' 'coverage')}}
+    "@vitest/coverage-v8": "^1.1.3",
+  {{/if}}
+    "eslint": "^8.56.0",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.1",
+    "rimraf": "^5.0.5",
+  {{#if (hasFeature 'release')}}
+    "semantic-release": "^22.0.12",
+  {{/if}}
+    "simple-git-hooks": "^2.9.0",
+    "typescript": "^5.3.3",
+  {{#if (hasFeature 'test')}}
+    "vitest": "^1.1.3",
+  {{/if}}
+  }, 
+  "engines": {
+    "node": "{{{nodeVersionsPattern}}}",
+    "pnpm": ">={{pnpmVersion.major}}",
+  },
+  "packageManager": "pnpm@{{pnpmVersion.version}}",
+  "prettier": "@skarab/prettier-config",
+  "eslintConfig": {
+    "root": true,
+    "extends": "@skarab/eslint-config/recommended",
+  },
+  "lint-staged": {
+    "*": [
+      "pnpm eslint-staged --fix --max-warnings=0",
+      "pnpm prettier --write --ignore-unknown"
+    ]
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  }
+}

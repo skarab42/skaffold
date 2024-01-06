@@ -46,13 +46,17 @@
     "skaffold:dev": "node ./output/bin/skaffold.js"
   },
   "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
     "execa": "^8.0.1",
     "fs-extra": "^11.2.0",
+    "handlebars": "^4.7.8",
+    "prettier": "^3.1.1",
     "semver": "^7.5.4",
     "validate-npm-package-name": "^5.0.0"
   },
   "devDependencies": {
-    "@skarab/eslint-config": "^4.1.0",
+    "@skarab/eslint-config": "^4.1.1",
     "@skarab/prettier-config": "^1.2.2",
     "@skarab/typescript-config": "^3.1.0",
     "@types/fs-extra": "^11.0.4",
@@ -61,7 +65,6 @@
     "@types/validate-npm-package-name": "^4.0.2",
     "eslint": "^8.56.0",
     "lint-staged": "^15.2.0",
-    "prettier": "^3.1.1",
     "rimraf": "^5.0.5",
     "simple-git-hooks": "^2.9.0",
     "typescript": "^5.3.3"

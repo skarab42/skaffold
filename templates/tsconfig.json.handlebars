@@ -1,0 +1,8 @@
+{
+  "extends": "@skarab/typescript-config",
+  "include": ["./source"{{#if (hasFeature 'test')}}, "./test"{{/if}}],
+  "compilerOptions": {
+    "noEmit": true,
+    "sourceMap": false
+  }
+}

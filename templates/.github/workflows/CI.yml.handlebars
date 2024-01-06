@@ -1,0 +1,69 @@
+name: Test{{#if (hasFeature 'release')}} & Release{{/if}}
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  test:
+    name: Test on node $\{{ matrix.node-version }} and $\{{ matrix.os }}
+    runs-on: $\{{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [{{nodeVersions}}]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install pnpm version {{pnpmVersion.major}}
+        uses: pnpm/action-setup@v2
+        with:
+          version: {{pnpmVersion.major}}
+      - name: Set node version to $\{{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          cache: 'pnpm'
+          node-version: $\{{ matrix.node-version }}
+      - name: Install dependencies
+        run: pnpm install
+      - name: Format source
+        run: pnpm format
+      - name: Lint source
+        run: pnpm lint
+      - name: Build source
+        run: pnpm build
+      - name: Test source
+        run: pnpm test
+
+{{#if (hasFeature 'release')}}
+  # release:
+  #   needs: test
+  #   if: $\{{ github.repository == '{{user.name}}/{{project.identifier}}' && github.ref == 'refs/heads/main'  }}
+  #   runs-on: ubuntu-latest
+  #   name: Release package on npm registry
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #     - name: Install pnpm version {{pnpmVersion.major}}
+  #       uses: pnpm/action-setup@v2
+  #       with:
+  #         version: {{pnpmVersion.major}}
+  #     - name: Set node version to {{nodeVersions.[0]}}
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: {{nodeVersions.[0]}}
+  #     - name: Install dependencies
+  #       run: pnpm install
+  #     - name: Build source
+  #       run: pnpm build
+  #     - name: Release package
+  #       run: pnpm release
+  #       env:
+  #         NPM_TOKEN: $\{{ secrets.NPM_TOKEN }}
+  #         GITHUB_TOKEN: $\{{ secrets.GITHUB_TOKEN }}
+{{/if}}
