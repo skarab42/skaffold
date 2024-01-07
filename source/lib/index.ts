@@ -1,6 +1,7 @@
 export * from './bin.js';
 export * from './build.js';
 export * from './features.js';
+export * from './fetch.js';
 export * from './fs.js';
 export * from './git.js';
 export * from './meta.js';

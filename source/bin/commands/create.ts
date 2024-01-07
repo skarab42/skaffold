@@ -3,6 +3,8 @@ import { Argument, Command, Option } from 'commander';
 import {
   type AfterBuild,
   features,
+  fetchCurrentNodeVersions,
+  getBinVersion,
   getGitUser,
   isFailure,
   printer,
@@ -14,8 +16,8 @@ import {
 
 const gitUser = await getGitUser();
 const defaultProjectName = randomProjectName();
-const nodeVersions = ['18', '20'];
-const pnpmVersion = '8.13.1';
+const nodeVersions = await fetchCurrentNodeVersions();
+const pnpmVersion = (await getBinVersion('pnpm')) ?? '8';
 
 export const createCommand = new Command('create')
   .description('create a new project (default)')
