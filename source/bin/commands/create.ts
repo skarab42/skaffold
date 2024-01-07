@@ -1,4 +1,5 @@
 import { Argument, Command, Option } from 'commander';
+import ora from 'ora';
 
 import {
   type AfterBuild,
@@ -85,7 +86,7 @@ async function createAction(projectName: string, options: CreateCommandOptions):
   const config = parseConfig(projectName, parseConfigOptions);
   const print = printer(colors);
 
-  const result = await skaffold(config);
+  const result = skaffold(config);
 
   if (isFailure(result)) {
     print.error(unwrap(result).join('\n'));
@@ -94,6 +95,38 @@ async function createAction(projectName: string, options: CreateCommandOptions):
   }
 
   const { project, outputDirectory } = config;
+  const { on, run } = unwrap(result);
+  const spinner = ora();
 
-  print.info(`Skaffold "${project.name}" in "${outputDirectory}"`);
+  on('build', () => {
+    print.info(`Skaffold "${project.name}" in "${outputDirectory}"`);
+    spinner.text = 'Building project';
+    spinner.start();
+  });
+
+  on('setup', () => {
+    spinner.text = 'Setup project';
+  });
+
+  on('run:pnpm-install', () => {
+    spinner.text = 'Installing dependencies';
+  });
+
+  on('run:pnpm-update', () => {
+    spinner.text = 'Updating dependecies';
+  });
+
+  on('run:git-init', () => {
+    spinner.text = 'Initializing git repository';
+  });
+
+  on('make:first-commit', () => {
+    spinner.text = 'Making first commit';
+  });
+
+  on('done', () => {
+    spinner.succeed('Project ready!');
+  });
+
+  await run();
 }

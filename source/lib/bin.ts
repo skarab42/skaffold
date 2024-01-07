@@ -25,3 +25,13 @@ export async function getBinSemVersion(bin: string): Promise<SemVer | undefined>
 export async function hasBin(bin: string): Promise<boolean> {
   return Boolean(await getBinVersion(bin));
 }
+
+export async function runBin(file: string, argv: string[], path: string, verbose = false): Promise<void> {
+  verbose && process.stdout.write(`run: ${file} ${argv.join(' ')}\n`);
+
+  const childProcess = execa(file, argv, { cwd: path });
+
+  verbose && childProcess.stdout?.pipe(process.stdout);
+
+  await childProcess;
+}

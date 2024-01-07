@@ -51,6 +51,7 @@
     "execa": "^8.0.1",
     "fs-extra": "^11.2.0",
     "handlebars": "^4.7.8",
+    "ora": "^8.0.1",
     "prettier": "^3.1.1",
     "semver": "^7.5.4",
     "validate-npm-package-name": "^5.0.0"
