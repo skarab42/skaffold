@@ -1,4 +1,5 @@
-import { skaffold, type SkaffoldConfig } from '../lib/index.js';
+/* eslint-disable no-console */
+import { isFailure, skaffold, type SkaffoldConfig, unwrap } from '../lib/index.js';
 
 const config: SkaffoldConfig = {
   outputDirectory: './@skarab/life',
@@ -15,6 +16,13 @@ const config: SkaffoldConfig = {
   features: ['bin', 'test', 'coverage', 'release'],
   nodeVersions: ['18', '20'],
   pnpmVersion: '8.13.1',
+  overwrite: false,
 };
 
-await skaffold(config);
+const result = await skaffold(config);
+
+if (isFailure(result)) {
+  console.error('error:', unwrap(result));
+} else {
+  console.log('info: Done!');
+}

@@ -2,6 +2,8 @@ import { SemVer } from 'semver';
 
 import { build } from './build.js';
 import type { Feature } from './features.js';
+import { failure, isFailure, type Result, success, unwrap } from './result.js';
+import { validateConfig } from './validate.js';
 
 export type Type = 'module' | 'commonjs';
 export type User = { name?: string | undefined; email?: string | undefined };
@@ -15,15 +17,21 @@ export type SkaffoldConfig = {
   pnpmVersion: string;
   nodeVersions: string[];
   outputDirectory: string;
+  overwrite: boolean;
 };
 
 export type SkaffoldBuildConfig = Omit<SkaffoldConfig, 'pnpmVersion'> & {
   pnpmVersion: SemVer;
 };
 
-export async function skaffold(config: SkaffoldConfig): Promise<void> {
-  const pnpmVersion = new SemVer(config.pnpmVersion);
-  const buildConfig: SkaffoldBuildConfig = { ...config, pnpmVersion };
+export async function skaffold(config: SkaffoldConfig): Promise<Result<true, string[]>> {
+  const configResult = validateConfig(config);
 
-  await build(buildConfig);
+  if (isFailure(configResult)) {
+    return failure(unwrap(configResult));
+  }
+
+  await build({ ...config, pnpmVersion: new SemVer(config.pnpmVersion) });
+
+  return success(true);
 }
