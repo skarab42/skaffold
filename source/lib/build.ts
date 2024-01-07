@@ -25,6 +25,10 @@ export async function build(config: SkaffoldBuildConfig): Promise<void> {
 
   if (config.features.includes('test')) {
     await template.copy('test/index.test.ts');
+
+    if (config.features.includes('coverage')) {
+      await template.copy('vitest.config.mjs');
+    }
   }
 
   await template.copy('.github/FUNDING.yml');
