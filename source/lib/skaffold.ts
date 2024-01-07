@@ -8,6 +8,12 @@ import { validateConfig } from './validate.js';
 export type Type = 'module' | 'commonjs';
 export type User = { name?: string | undefined; email?: string | undefined };
 export type Project = { name: string; namespace?: string | undefined; identifier: string };
+export type AfterBuild = {
+  runGitInit: boolean;
+  runPnpmInstall: boolean;
+  runPnpmUpdate: boolean;
+  makeFirstCommit: boolean;
+};
 
 export type SkaffoldConfig = {
   user: User;
@@ -18,6 +24,7 @@ export type SkaffoldConfig = {
   nodeVersions: string[];
   outputDirectory: string;
   overwrite: boolean;
+  afterBuild: AfterBuild;
 };
 
 export type SkaffoldBuildConfig = Omit<SkaffoldConfig, 'pnpmVersion'> & {

@@ -1,28 +1,17 @@
-/* eslint-disable no-console */
-import { isFailure, skaffold, type SkaffoldConfig, unwrap } from '../lib/index.js';
+import path from 'node:path';
 
-const config: SkaffoldConfig = {
-  outputDirectory: './@skarab/life',
-  project: {
-    name: '@skarab/life',
-    namespace: '@skarab',
-    identifier: 'life',
-  },
-  user: {
-    name: 'skarab42',
-    email: 'contact@skarab42.dev',
-  },
-  type: 'module',
-  features: ['bin', 'test', 'coverage', 'release'],
-  nodeVersions: ['18', '20'],
-  pnpmVersion: '8.13.1',
-  overwrite: false,
-};
+import { Command } from 'commander';
+import fs from 'fs-extra';
 
-const result = await skaffold(config);
+import { metaDirname } from '../lib/index.js';
+import { createCommand } from './commands/index.js';
 
-if (isFailure(result)) {
-  console.error('error:', unwrap(result));
-} else {
-  console.log('info: Done!');
-}
+const rootPath = path.resolve(metaDirname(import.meta), '..', '..', 'package.json');
+const packageJson = fs.readJSONSync(rootPath) as { name: string; description: string; version: string };
+
+new Command()
+  .name(packageJson.name)
+  .description(packageJson.description)
+  .version(packageJson.version, '-v, --version')
+  .addCommand(createCommand, { isDefault: true })
+  .parse();
