@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@skarab/prettier-config':
+    specifier: ^1.2.2
+    version: 1.2.2(prettier@3.1.1)
   chalk:
     specifier: ^5.3.0
     version: 5.3.0
@@ -37,9 +40,6 @@ devDependencies:
   '@skarab/eslint-config':
     specifier: ^4.1.1
     version: 4.1.1(eslint@8.56.0)(typescript@5.3.3)
-  '@skarab/prettier-config':
-    specifier: ^1.2.2
-    version: 1.2.2(prettier@3.1.1)
   '@skarab/typescript-config':
     specifier: ^3.1.0
     version: 3.1.0(typescript@5.3.3)
@@ -464,7 +464,7 @@ packages:
       prettier: '>=2'
     dependencies:
       prettier: 3.1.1
-    dev: true
+    dev: false
 
   /@skarab/typescript-config@3.1.0(typescript@5.3.3):
     resolution: {integrity: sha512-LTcqU8wdW8CKtHTr3I221wqaQ9I1OBhIa3CAxInUXH/8ia50Iy8ohgYbis8UVJCX8hUP5/mzT5NSCZ1AaN43FA==}
@@ -2695,6 +2695,7 @@ packages:
     resolution: {integrity: sha512-22UbSzg8luF4UuZtzgiUOfcGM8s4tjBv6dJRT7j275NXsy2jb4aJa4NNveul5x4eqlF1wuhuR2RElK71RvmVaw==}
     engines: {node: '>=14'}
     hasBin: true
+    dev: false
 
   /process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}

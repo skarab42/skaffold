@@ -50,6 +50,7 @@
     "bin:skaffold": "node ./output/bin/skaffold.js"
   },
   "dependencies": {
+    "@skarab/prettier-config": "^1.2.2",
     "chalk": "^5.3.0",
     "commander": "^11.1.0",
     "execa": "^8.0.1",
@@ -62,7 +63,6 @@
   },
   "devDependencies": {
     "@skarab/eslint-config": "^4.1.1",
-    "@skarab/prettier-config": "^1.2.2",
     "@skarab/typescript-config": "^3.1.0",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.10.6",
