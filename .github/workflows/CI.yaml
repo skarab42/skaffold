@@ -1,4 +1,4 @@
-name: CI
+name: Test & Release
 
 on:
   push:
@@ -10,42 +10,56 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        node: ['14']
-    name: Test on Node ${{ matrix.node }}
+        node-version: [18, 20]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    name: Test on node ${{ matrix.node-version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v2
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install pnpm version 8
+        uses: pnpm/action-setup@v2
         with:
-          node-version: ${{ matrix.node }}
-      - uses: pnpm/action-setup@v2.1.0
+          version: 8
+      - name: Set node version to ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
-          version: 7.6.0
-      - run: pnpm install
-      - run: pnpm build
-      - run: pnpm test
+          cache: 'pnpm'
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: pnpm install
+      - name: Format source
+        run: pnpm format
+      - name: Lint source
+        run: pnpm lint
+      - name: Check build
+        run: pnpm build:check
 
   release:
-    needs: [test]
-    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: test
+    if: ${{ github.repository == 'skarab42/skaffold' && github.ref == 'refs/heads/main'  }}
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: ['14']
-    name: Release on NPM
+    name: Release package on npm registry
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v2
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install pnpm version 8
+        uses: pnpm/action-setup@v2
         with:
-          node-version: ${{ matrix.node }}
-      - uses: pnpm/action-setup@v2.1.0
+          version: 8
+      - name: Set node version to 18
+        uses: actions/setup-node@v4
         with:
-          version: 7.6.0
-      - run: pnpm install
-      - run: pnpm build
-      - run: pnpm release
+          node-version: 18
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build source
+        run: pnpm build
+      - name: Release package
+        run: pnpm release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

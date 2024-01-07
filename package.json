@@ -1,71 +1,95 @@
 {
   "name": "@skarab/skaffold",
-  "version": "0.0.0-development",
   "description": "The best way to scaffold a project as I would do it myself (Kappa)",
-  "type": "module",
-  "bin": "./bin/index.js",
-  "author": "skarab42",
+  "version": "0.0.0-development",
   "license": "MIT",
-  "scripts": {
-    "prepare": "npx simple-git-hooks",
-    "build": "tsc -p ./tsconfig.build.json",
-    "watch": "pnpm build --watch",
-    "check": "tsc -p ./tsconfig.json",
-    "lint": "eslint --max-warnings=0 .",
-    "format": "prettier --check .",
-    "test": "pnpm check && pnpm lint && pnpm format",
-    "release": "semantic-release --branches main",
-    "dev": "pnpm build && pnpm skaffold"
+  "author": {
+    "name": "skarab42",
+    "email": "contact@skarab42.dev"
+  },
+  "funding": "https://github.com/sponsors/skarab42",
+  "homepage": "https://github.com/skarab42/skaffold",
+  "repository": "https://github.com/skarab42/skaffold",
+  "bugs": "https://github.com/skarab42/skaffold/issues",
+  "type": "module",
+  "module": "./output/lib/index.js",
+  "types": "./output/lib/index.d.ts",
+  "bin": {
+    "skaffold": "./output/bin/skaffold.js"
   },
   "private": false,
   "publishConfig": {
     "access": "public"
   },
   "files": [
-    "bin",
-    "build",
-    "template"
+    "output",
+    "templates"
   ],
+  "keywords": [
+    "scaffold",
+    "library",
+    "package",
+    "project",
+    "publish",
+    "build",
+    "test",
+    "lint"
+  ],
+  "scripts": {
+    "prepare": "npx simple-git-hooks",
+    "clean": "rimraf ./output",
+    "lint": "eslint . --max-warnings=0",
+    "lint:fix": "pnpm lint --fix",
+    "format": "pnpm format:run --check",
+    "format:run": "prettier **/* --ignore-unknown",
+    "format:write": "pnpm format:run --write",
+    "build": "pnpm clean && tsc -p ./tsconfig.build.json",
+    "build:check": "tsc -p ./tsconfig.json",
+    "build:watch": "pnpm build --watch",
+    "release": "semantic-release --branches main",
+    "bin:skaffold": "node ./output/bin/skaffold.js"
+  },
   "dependencies": {
-    "chalk": "^5.2.0",
-    "commander": "^9.4.1",
-    "execa": "^6.1.0",
-    "fs-extra": "^11.1.0",
-    "inquirer": "^9.1.4",
-    "project-name-generator": "^2.1.9",
-    "semver": "^7.3.8",
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "execa": "^8.0.1",
+    "fs-extra": "^11.2.0",
+    "handlebars": "^4.7.8",
+    "ora": "^8.0.1",
+    "prettier": "^3.1.1",
+    "semver": "^7.5.4",
     "validate-npm-package-name": "^5.0.0"
   },
   "devDependencies": {
-    "@skarab/eslint-config": "^3.2.0",
+    "@skarab/eslint-config": "^4.1.1",
     "@skarab/prettier-config": "^1.2.2",
-    "@skarab/typescript-config": "^2.1.0",
-    "@types/fs-extra": "^9.0.13",
-    "@types/inquirer": "^9.0.3",
-    "@types/node": "^18.11.12",
-    "@types/project-name-generator": "^2.1.1",
-    "@types/semver": "^7.3.13",
-    "@types/validate-npm-package-name": "^4.0.0",
-    "eslint": "^8.29.0",
-    "lint-staged": "^13.1.0",
-    "prettier": "^2.8.1",
-    "semantic-release": "^19.0.5",
-    "simple-git-hooks": "^2.8.1",
-    "typescript": "^4.9.4"
+    "@skarab/typescript-config": "^3.1.0",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.10.6",
+    "@types/semver": "^7.5.6",
+    "@types/validate-npm-package-name": "^4.0.2",
+    "eslint": "^8.56.0",
+    "lint-staged": "^15.2.0",
+    "rimraf": "^5.0.5",
+    "simple-git-hooks": "^2.9.0",
+    "typescript": "^5.3.3"
   },
   "engines": {
-    "node": ">=14",
-    "pnpm": ">=7"
+    "node": "^18 || >=20",
+    "pnpm": ">=8"
   },
-  "packageManager": "pnpm@7.6.0",
-  "keywords": [
-    "typescript",
-    "scaffold",
-    "package",
-    "project",
-    "skarab",
-    "strict",
-    "init",
-    "app"
-  ]
+  "packageManager": "pnpm@8.12.1",
+  "prettier": "@skarab/prettier-config",
+  "eslintConfig": {
+    "extends": "@skarab/eslint-config/recommended"
+  },
+  "lint-staged": {
+    "*": [
+      "pnpm eslint-staged --fix --max-warnings=0",
+      "pnpm prettier --write --ignore-unknown"
+    ]
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  }
 }

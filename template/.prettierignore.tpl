@@ -1,5 +1,0 @@
-node_modules
-coverage
-build
-
-pnpm-lock.yaml
