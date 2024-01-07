@@ -22,7 +22,8 @@
     "access": "public"
   },
   "files": [
-    "output"
+    "output",
+    "templates"
   ],
   "keywords": [
     "scaffold",
@@ -36,14 +37,17 @@
   ],
   "scripts": {
     "prepare": "npx simple-git-hooks",
+    "clean": "rimraf ./output",
     "lint": "eslint . --max-warnings=0",
     "lint:fix": "pnpm lint --fix",
-    "format": "prettier **/* --ignore-unknown",
-    "format:write": "pnpm format --write",
-    "check": "tsc -p ./tsconfig.json",
-    "build": "rimraf ./output && tsc -p ./tsconfig.build.json",
+    "format": "pnpm format:run --check",
+    "format:run": "prettier **/* --ignore-unknown",
+    "format:write": "pnpm format:run --write",
+    "build": "pnpm clean && tsc -p ./tsconfig.build.json",
+    "build:check": "tsc -p ./tsconfig.json",
     "build:watch": "pnpm build --watch",
-    "skaffold:dev": "node ./output/bin/skaffold.js"
+    "release": "semantic-release --branches main",
+    "bin:skaffold": "node ./output/bin/skaffold.js"
   },
   "dependencies": {
     "chalk": "^5.3.0",
@@ -71,7 +75,7 @@
     "typescript": "^5.3.3"
   },
   "engines": {
-    "node": ">=18",
+    "node": "^18 || >=20",
     "pnpm": ">=8"
   },
   "packageManager": "pnpm@8.12.1",
