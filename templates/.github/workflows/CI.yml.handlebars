@@ -8,6 +8,9 @@ on:
     branches:
       - '*'
 
+permissions:
+  contents: read
+
 jobs:
   test:
     strategy:
@@ -45,6 +48,11 @@ jobs:
   #   needs: test
   #   if: $\{{ github.repository == '{{user.name}}/{{project.identifier}}' && github.ref == 'refs/heads/main'  }}
   #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: write
+  #     issues: write
+  #     pull-requests: write
+  #     id-token: write
   #   name: Release package on npm registry
   #   steps:
   #     - name: Checkout
