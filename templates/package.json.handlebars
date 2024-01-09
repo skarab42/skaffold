@@ -63,11 +63,12 @@
   {{/if}}
   },
   "devDependencies": {
-    "@skarab/eslint-config": "^4.1.1",
+    "@skarab/eslint-config": "^5.0.0",
+    "@skarab/eslint-staged": "^1.0.0",
     "@skarab/prettier-config": "^1.2.2",
     "@skarab/typescript-config": "^3.1.0",
   {{#if (hasFeature 'bin')}}
-    "@types/node": "^20.10.6",
+    "@types/node": "^20.10.8",
   {{/if}}
   {{#if (hasFeature 'test' 'coverage')}}
     "@vitest/coverage-v8": "^1.1.3",
