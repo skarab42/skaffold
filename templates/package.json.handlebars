@@ -27,6 +27,9 @@
 {{#if (hasFeature 'bin')}}
   "bin": "./output/bin/index.js",
 {{/if}}
+  "exports": {
+    ".": "./output/index.js"
+  },
   "private": true,
   "publishConfig": {
     "access": "restricted"
