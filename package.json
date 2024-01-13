@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "@skarab/prettier-config": "^1.2.2",
+    "@skarab/result": "^1.0.1",
     "chalk": "^5.3.0",
     "commander": "^11.1.0",
     "execa": "^8.0.1",

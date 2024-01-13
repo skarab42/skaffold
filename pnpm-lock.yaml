@@ -8,6 +8,9 @@ dependencies:
   '@skarab/prettier-config':
     specifier: ^1.2.2
     version: 1.2.2(prettier@3.1.1)
+  '@skarab/result':
+    specifier: ^1.0.1
+    version: 1.0.1
   chalk:
     specifier: ^5.3.0
     version: 5.3.0
@@ -476,6 +479,11 @@ packages:
       prettier: '>=2'
     dependencies:
       prettier: 3.1.1
+    dev: false
+
+  /@skarab/result@1.0.1:
+    resolution: {integrity: sha512-Ghc2Aur3R3Yfj58/UX8oeXF6FL5KQBDDusHX1djUd4029+AqtltLi/Cyk+jEeajAl/PTN26/mff/S2NWPpoe1w==}
+    engines: {node: ^18 || >=20, pnpm: '>=8'}
     dev: false
 
   /@skarab/typescript-config@3.1.0(typescript@5.3.3):

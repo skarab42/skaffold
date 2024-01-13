@@ -1,3 +1,4 @@
+import { isFailure, unwrap } from '@skarab/result';
 import { Argument, Command, Option } from 'commander';
 import ora from 'ora';
 
@@ -7,12 +8,10 @@ import {
   fetchCurrentNodeVersions,
   getBinVersion,
   getGitUser,
-  isFailure,
   printer,
   randomProjectName,
   skaffold,
   type SkaffoldConfig,
-  unwrap,
 } from '../../lib/index.js';
 
 const gitUser = await getGitUser();

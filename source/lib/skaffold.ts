@@ -1,10 +1,10 @@
 import EventEmitter from 'node:events';
 
+import { failure, isFailure, type Result, success, unwrap } from '@skarab/result';
 import { SemVer } from 'semver';
 
 import { build } from './build.js';
 import type { Feature } from './features.js';
-import { failure, isFailure, type Result, success, unwrap } from './result.js';
 import { setup } from './setup.js';
 import { validateConfig } from './validate.js';
 

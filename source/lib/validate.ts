@@ -1,9 +1,9 @@
 import fs from 'node:fs';
 
+import { failure, isFailure, type Result, success, unwrap } from '@skarab/result';
 import validateNpmPackageName from 'validate-npm-package-name';
 
 import { isDirectoryEmpty } from './fs.js';
-import { failure, isFailure, type Result, success, unwrap } from './result.js';
 import type { SkaffoldConfig } from './skaffold.js';
 
 export function validateProjectName(projectName: string): Result<string, string[]> {

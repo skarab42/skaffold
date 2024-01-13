@@ -7,7 +7,6 @@ export * from './git.js';
 export * from './meta.js';
 export * from './print.js';
 export * from './random.js';
-export * from './result.js';
 export * from './skaffold.js';
 export * from './template.js';
 export * from './validate.js';
